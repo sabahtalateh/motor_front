@@ -1,5 +1,5 @@
 import { Block, Editor } from './Editor'
-import { Focus, placeFocus } from './Focus'
+import { Focus } from './Focus'
 
 export interface MarkupChar {
     char: string
@@ -40,9 +40,10 @@ export class BlockEditor {
         return createMarkupString(markup)
     }
 
-    editorReceivesNewContent = (content: string, setStateCallback: any) => {
-        // TODO check if new lines in content
-
+    updateContent = (content: string, setStateCallback: any) => {
+        if (content === this.block.text) {
+            return
+        }
         const newTextLen = [...content].length
         const textChars = [...this.block.text]
         const prevTextLen = textChars.length
@@ -53,6 +54,8 @@ export class BlockEditor {
             // Text removed. No inserted text
             if (textLenChangedBy < 0) {
                 const removedFrom: number = focusBeforeChange.caret + textLenChangedBy
+                this.editor.stackUndo(this.block, { type: 'caret', caret: this.focus.caret })
+
                 this.update([{ cmd: 'delete', position: removedFrom, deleteCount: -textLenChangedBy }])
 
                 setStateCallback({ markup: this.getMarkup() })
@@ -61,16 +64,25 @@ export class BlockEditor {
             } else if (textLenChangedBy > 0) {
                 const addedText = content.slice(this.focus.caret, focusBeforeChange.caret + textLenChangedBy)
 
+                this.editor.stackUndo(this.block, { type: 'caret', caret: this.focus.caret })
+
                 this.update([{ cmd: 'insert', position: focusBeforeChange.caret, insertText: addedText }])
 
                 setStateCallback({ markup: this.getMarkup() })
                 this.focus.caret += textLenChangedBy
 
                 if (this.block.text.includes('\n')) {
-                    this.editor.rebuildBlocks(this.block, this.focus)
+                    this.editor.splitBlock(this.block, this.focus)
                 }
             }
         } else if ('selection' === focusBeforeChange.type) {
+            // Normalize selection
+            if (focusBeforeChange.selection.start > focusBeforeChange.selection.end) {
+                const end = focusBeforeChange.selection.start
+                focusBeforeChange.selection.start = focusBeforeChange.selection.end
+                focusBeforeChange.selection.end = end
+            }
+
             // If prev focus was selection
             let selectionStart: number = focusBeforeChange.selection.start
             let selectionEnd: number = focusBeforeChange.selection.end
@@ -84,29 +96,58 @@ export class BlockEditor {
                 cursorMovedBy += [...addedText].length
             }
 
-            this.update(commands)
+            this.editor.stackUndo(this.block, { type: 'caret', caret: this.focus.selection.end })
 
-            // console.log(getFocus())
+            this.update(commands)
 
             setStateCallback({ markup: this.getMarkup() })
             this.focus = {
                 type: 'caret',
-                caret: selectionStart + cursorMovedBy
+                caret: selectionStart + cursorMovedBy,
             }
-            console.log(this.focus)
             if (this.block.text.includes('\n')) {
-                this.editor.rebuildBlocks(this.block, this.focus)
+                this.editor.splitBlock(this.block, this.focus)
             }
         }
+    }
+
+    moveFocusToPrevBlock = () => {
+        this.editor.moveFocusToPrevBlock(this.block)
+    }
+
+    moveFocusToNextBlock = () => {
+        this.editor.moveFocusToNextBlock(this.block)
+    }
+
+    backJoin = () => {
+        this.editor.backJoin(this.block)
     }
 
     update = (commands: TextCommand[]) => {
         commands.forEach(cmd => {
             this.processCommand(cmd)
         })
+        console.log('snap')
     }
 
-    processCommand = (cmd: TextCommand) => {
+    setFocus = (focus: Focus) => {
+        this.focus = focus
+        this.editor.setFocus(this.block, focus)
+    }
+
+    getBlock = (): Block => {
+        return this.block
+    }
+
+    getFocus = (): Focus => {
+        return this.focus
+    }
+
+    getTextLen = (): number => {
+        return [...this.block.text].length
+    }
+
+    private processCommand = (cmd: TextCommand) => {
         const content = this.block.text
 
         if ('delete' === cmd.cmd) {
@@ -125,9 +166,7 @@ export class BlockEditor {
                 }
 
                 if (removedFrom > mark.startPos && removedFrom < mark.endPos) {
-                    const removeCount = removedTo <= mark.endPos
-                        ? removedLen
-                        : mark.endPos - removedFrom
+                    const removeCount = removedTo <= mark.endPos ? removedLen : mark.endPos - removedFrom
 
                     mark.endPos -= removeCount
                 }
@@ -148,16 +187,11 @@ export class BlockEditor {
                 }
             })
 
-            this.block.text = `${ content.slice(0, insertedStart) }${ insertedText }${ content.slice(insertedStart, content.length) }`
+            this.block.text = `${ content.slice(0, insertedStart) }${ insertedText }${ content.slice(
+                insertedStart,
+                content.length,
+            ) }`
         }
-    }
-
-    updateFocus = () => {
-        this.focus = getFocus()
-    }
-
-    placeFocus = () => {
-        placeFocus(this.block, this.focus)
     }
 }
 
@@ -187,16 +221,26 @@ const createMarkupChars = (block: Block): Markup => {
 
         const openingMarks = marks.filter(m => m.startPos === i)
         if (openingMarks.length > 0) {
+            if ('text' === regionType) {
+                markupChar.closeText = true
+            }
             regionType = 'marks'
             if (i != 0) {
-                markup[regionOpenedAt].regionEnd = i
+                if (regionOpenedAt === i) {
+                    markupChar.regionEnd = i
+                } else {
+                    markup[regionOpenedAt].regionEnd = i
+                }
             }
             regionOpenedAt = i
             const marksOpenedCount = openedMarks.length
-            if (marksOpenedCount > 0) {
+            if (
+                marksOpenedCount > 0
+            // || openingMarks.length > 0
+            ) {
                 markupChar.closeMarks = marksOpenedCount
             } else {
-                if (i !== 0) {
+                if (i !== 0 && openingMarks.length === 0) {
                     markupChar.closeText = true
                 }
             }
@@ -229,6 +273,15 @@ const createMarkupChars = (block: Block): Markup => {
         }
 
         markup.push(markupChar)
+    }
+
+    if (0 === markup.length) {
+        markup.push({
+            char: '',
+            openText: true,
+            closeText: true,
+            regionEnd: 0,
+        })
     }
 
     return markup
@@ -287,35 +340,4 @@ const createMarkupString = (markup: Markup) => {
     return markupString
 }
 
-
-const getFocus = (): Focus => {
-    let selection = window.getSelection()
-
-    let startNode: any = selection.anchorNode.parentNode
-    let endNode: any = selection.focusNode.parentNode
-
-    let selectionStart = Number.parseInt(startNode.dataset.regionStart) + selection.anchorOffset
-    let selectionEnd = Number.parseInt(endNode.dataset.regionStart) + selection.focusOffset
-
-    if (isNaN(selectionStart) || isNaN(selectionEnd)) {
-        selectionStart = selectionEnd = 0
-    }
-
-    let focus: Focus
-
-    if (selectionStart === selectionEnd) {
-        focus = {
-            type: 'caret',
-            caret: selectionStart
-        }
-    } else {
-        focus = {
-            type: 'selection',
-            selection: { start: selectionStart, end: selectionEnd }
-        }
-    }
-
-    return focus
-}
-
-export { createMarkupChars, createMarkupString, getFocus }
+export { createMarkupChars, createMarkupString }

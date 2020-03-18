@@ -33,13 +33,15 @@ export default class MarkLayer extends React.Component<Props, State> {
 
     render() {
         console.log('ML render')
-        return <div
-            style={ {
-                position: 'absolute',
-                color: 'transparent',
-                top: 0
-            } }
-            dangerouslySetInnerHTML={ { __html: this.markedContent(this.props) } }
-        />
+        return (
+            <div
+                style={{
+                    position: 'absolute',
+                    color: 'transparent',
+                    top: 0,
+                }}
+                dangerouslySetInnerHTML={{ __html: this.markedContent(this.props) }}
+            />
+        )
     }
 }

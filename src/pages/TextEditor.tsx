@@ -15,13 +15,6 @@ interface Text {
     blocks: Block[]
 }
 
-
-interface Mark {
-    id: string
-    startPos: number
-    endPos: number
-}
-
 interface Props extends StateProps, DispatchProps {
     textService: GraphQLService
     match: match<{ id: string }>
@@ -45,9 +38,13 @@ interface State {
     text: Text
 }
 
+const Control = 'Control'
+const Meta = 'Meta'
+const Shift = 'Shift'
 
 class TextEditor extends React.Component<Props, State> {
-    private editor: Editor
+    private readonly editor: Editor
+    private specialKeysPressed: string[] = []
 
     constructor(props: Readonly<Props>) {
         super(props)
@@ -58,40 +55,40 @@ class TextEditor extends React.Component<Props, State> {
             blocks: [
                 {
                     id: '111',
-                    text: `112233445566778899`,
+                    text: `1111 2222 3333 4444 5555`,
                     marks: [
                         {
                             id: 'm1',
-                            startPos: 4,
-                            endPos: 7
-                        },
-                        {
-                            id: 'm2',
-                            startPos: 8,
-                            endPos: 12
-                        },
-                        {
-                            id: 'm3',
                             startPos: 2,
-                            endPos: 6
+                            endPos: 9,
                         },
-                    ]
+                        // {
+                        //     id: 'm2',
+                        //     startPos: 8,
+                        //     endPos: 12
+                        // },
+                        // {
+                        //     id: 'm3',
+                        //     startPos: 2,
+                        //     endPos: 6
+                        // },
+                    ],
                 },
                 {
                     id: '222',
-                    text: `1234`,
+                    text: `1111`,
                     marks: [
-                        {
-                            id: 'm1',
-                            startPos: 1,
-                            endPos: 2
-                        },
+                        // {
+                        //     id: 'm10',
+                        //     startPos: 1,
+                        //     endPos: 3
+                        // },
                         //     {
                         //         id: 'm2',
                         //         startPos: 5,
                         //         endPos: 15
                         //     },
-                    ]
+                    ],
                 },
             ],
         }
@@ -100,20 +97,41 @@ class TextEditor extends React.Component<Props, State> {
         this.state = { text: this.editor }
     }
 
-    render() {
-        // console.log(this.state)
+    keyDownHandler = (e: any) => {
+        if (Control === e.key || Meta === e.key || Shift === e.key) {
+            this.specialKeysPressed.push(e.key)
+        }
+        if (e.key === 'z' && (this.specialKeysPressed.includes(Control) || this.specialKeysPressed.includes(Meta))) {
+            if (this.specialKeysPressed.includes(Shift)) {
+                this.editor.unstackRedo()
+            } else {
+                this.editor.unstackUndo()
+            }
+        }
+    }
 
-        return <>
-            { this.state.text.blocks.map(b => {
-                return <TextBlockView
-                    key={ b.id }
-                    block={ b }
-                    editor={ this.editor }
-                    data-editor-element="editor"
-                    focused={ false }
-                />
-            }) }
-        </>
+    keyUpHandler = (e: any) => {
+        if (Control === e.key || Meta === e.key || Shift === e.key) {
+            this.specialKeysPressed = this.specialKeysPressed.filter(k => k !== e.key)
+        }
+    }
+
+    render() {
+        return (
+            <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
+                {this.state.text.blocks.map(b => {
+                    return (
+                        <TextBlockView
+                            key={b.id}
+                            block={b}
+                            editor={this.editor}
+                            data-editor-element="editor"
+                            focused={false}
+                        />
+                    )
+                })}
+            </div>
+        )
     }
 }
 

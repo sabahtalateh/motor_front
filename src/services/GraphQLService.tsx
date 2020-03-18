@@ -8,7 +8,7 @@ export default class GraphQLService {
     }
 
     text: (id: string) => Promise<any> = (id: string) => {
-        return fetch(`${ this.graphQl }`, {
+        return fetch(`${this.graphQl}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: textAndMarksQuery(id) }),

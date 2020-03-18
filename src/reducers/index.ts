@@ -60,7 +60,7 @@ const textReducer = (state: TextState = textInitialState, action: any) => {
 }
 
 export const rootReducer = combineReducers({
-    text: textReducer
+    text: textReducer,
 })
 
 export type AppState = ReturnType<typeof rootReducer>

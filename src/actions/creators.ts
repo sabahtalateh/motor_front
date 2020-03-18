@@ -9,10 +9,10 @@ const textLoaded = (text: Text) => action(TextLoadingActions.LOADED, text)
 const textRequested = () => action(TextLoadingActions.REQUESTED)
 const textLoadingError = () => action(TextLoadingActions.ERROR)
 
-
 export const fetchText = (dispatch: Dispatch<any>, graphQLService: GraphQLService) => (id: string) => {
     dispatch(textRequested())
-    graphQLService.text(id)
+    graphQLService
+        .text(id)
         .then(resp => {
             if (!resp.ok) {
                 dispatch(textLoadingError())
