@@ -116,12 +116,26 @@ class TextEditor extends React.Component<Props, State> {
         }
     }
 
+    markHandler = () => {
+        const focus = this.editor.getFocus()
+        const focusBlock = this.editor.getFocusBlock()
+        if (undefined !== focus && 'selection' === focus.type && undefined !== focusBlock) {
+            this.editor.mark(focusBlock, focus.selection)
+        }
+    }
+
     render() {
         return (
-            <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
-                {this.state.text.blocks.map(b => {
-                    return <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} />
-                })}
+            <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
+                <button onClick={ this.markHandler }>mark</button>
+                { this.state.text.blocks.map(b => {
+                    return <TextBlockView key={ b.id }
+                                          block={ b }
+                                          editor={ this.editor }
+                                          data-editor-element="editor"
+                                          focused={ false }
+                    />
+                }) }
             </div>
         )
     }

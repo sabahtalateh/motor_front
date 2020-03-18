@@ -3,7 +3,12 @@ import { Block } from './Editor'
 export interface Focus {
     type: 'caret' | 'selection'
     caret?: number
-    selection?: { start: number; end: number }
+    selection?: Selection
+}
+
+export interface Selection {
+    start: number
+    end: number
 }
 
 const calcFocus = (): Focus => {
@@ -36,8 +41,8 @@ const calcFocus = (): Focus => {
     return focus
 }
 
+// TODO Передавать колбеком в редактор и вызывать из него
 const placeFocus = (block: Block, focus: Focus) => {
-    // console.log(block, focus)
     const focusAbsolutePosition = 'caret' === focus.type ? focus.caret : focus.selection.start
 
     const area = document.getElementById(block.id)

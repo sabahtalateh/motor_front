@@ -1,5 +1,5 @@
 import { Mark } from './BlockEditor'
-import { Focus, placeFocus } from './Focus'
+import { Focus, placeFocus, Selection } from './Focus'
 import uuid = require('uuid')
 import { deep } from '../util/Deep'
 
@@ -189,6 +189,26 @@ export class Editor {
         const focusBlock = this.blocks[blockIdx + 1]
         placeFocus(focusBlock, { type: 'caret', caret: 0 })
     }
+
+    mark = (block: Block, selection: Selection) => {
+        block.marks.push({
+            id: uuid.v4(),
+            startPos: selection.start,
+            endPos: selection.end
+        })
+        const blockIdx = this.blocks.findIndex(b => b.id === block.id)
+        block.id = uuid.v4()
+        this.blocks[blockIdx] = block
+        this.setStateCallback({ text: this })
+    }
+
+    getFocus = (): Focus => {
+        return this.focus
+    }
+
+    getFocusBlock = (): Block => {
+        return this.focusBlock
+    }
 }
 
 const splitTextToParagraphs = (text: string, caretAt: number): Paragraph[] => {
@@ -231,5 +251,5 @@ const joinBlocks = (lft: Block, rgt: Block): Block => {
         m.endPos += lftLen
     })
 
-    return { id: uuid.v4(), text: `${lft.text}${rgt.text}`, marks: [...lft.marks, ...rgt.marks] }
+    return { id: uuid.v4(), text: `${ lft.text }${ rgt.text }`, marks: [...lft.marks, ...rgt.marks] }
 }
