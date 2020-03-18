@@ -101,8 +101,7 @@ export class Editor {
         const rebuilt: Block[] = []
         let focusBlock: Block
         let focusPosition: number
-        const cursorPositionBeforeRebuild =
-            'caret' === focusInsideInitiator.type ? focusInsideInitiator.caret : focusInsideInitiator.selection.end
+        const cursorPositionBeforeRebuild = 'caret' === focusInsideInitiator.type ? focusInsideInitiator.caret : focusInsideInitiator.selection.end
 
         this.blocks.forEach(b => {
             if (b.id === block.id) {

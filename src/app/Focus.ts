@@ -51,11 +51,7 @@ const placeFocus = (block: Block, focus: Focus) => {
             // 1 - Node
             const regionStart = Number.parseInt(checkingNode.dataset.regionStart)
             const regionEnd = Number.parseInt(checkingNode.dataset.regionEnd)
-            if (
-                1 === checkingNode.nodeType &&
-                regionStart <= focusAbsolutePosition &&
-                regionEnd >= focusAbsolutePosition
-            ) {
+            if (1 === checkingNode.nodeType && regionStart <= focusAbsolutePosition && regionEnd >= focusAbsolutePosition) {
                 nodeRegionStart = regionStart
                 node = area.childNodes[i]
                 break
@@ -96,11 +92,7 @@ const jjj = (blockId: string, pos: number) => {
             // 1 - Node
             const regionStart = Number.parseInt(checkingNode.dataset.regionStart)
             const regionEnd = Number.parseInt(checkingNode.dataset.regionEnd)
-            if (
-                1 === checkingNode.nodeType &&
-                regionStart <= focusAbsolutePosition &&
-                regionEnd >= focusAbsolutePosition
-            ) {
+            if (1 === checkingNode.nodeType && regionStart <= focusAbsolutePosition && regionEnd >= focusAbsolutePosition) {
                 nodeRegionStart = regionStart
                 node = area.childNodes[i]
                 break

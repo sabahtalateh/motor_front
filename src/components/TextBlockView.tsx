@@ -58,11 +58,7 @@ export default class TextBlockView extends React.Component<Props, State> {
             const focus = this.editor.getFocus()
             const focusAtStart = 'caret' === focus.type && 0 === focus.caret
             if (focusAtStart) {
-                if (
-                    (this.changeFired && !this.selectFired) ||
-                    (!this.changeFired && this.selectFired) ||
-                    (!this.changeFired && !this.selectFired)
-                ) {
+                if ((this.changeFired && !this.selectFired) || (!this.changeFired && this.selectFired) || (!this.changeFired && !this.selectFired)) {
                     this.editor.backJoin()
                 }
             }

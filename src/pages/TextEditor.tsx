@@ -120,15 +120,7 @@ class TextEditor extends React.Component<Props, State> {
         return (
             <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
                 {this.state.text.blocks.map(b => {
-                    return (
-                        <TextBlockView
-                            key={b.id}
-                            block={b}
-                            editor={this.editor}
-                            data-editor-element="editor"
-                            focused={false}
-                        />
-                    )
+                    return <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} />
                 })}
             </div>
         )
