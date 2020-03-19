@@ -113,19 +113,19 @@ export default class TextBlockView extends React.Component<Props, State> {
     render() {
         return (
             <ContentEditable
-                id={ this.props.block.id }
-                html={ this.state.markup }
-                onChange={ this.changeHandler }
-                onSelect={ this.selectHandler }
-                onKeyUp={ this.keyUpHandler }
+                id={this.props.block.id}
+                html={this.state.markup}
+                onChange={this.changeHandler}
+                onSelect={this.selectHandler}
+                onKeyUp={this.keyUpHandler}
                 data-region-start="0"
                 data-editor-element="block"
-                style={ {
+                style={{
                     whiteSpace: 'pre-wrap',
                     border: '1px solid white',
                     borderBottom: 'none',
                     backgroundColor: '#FFEFD5',
-                } }
+                }}
             />
         )
     }
