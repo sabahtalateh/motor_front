@@ -34,12 +34,7 @@ export class Editor {
     focusBlock: Block
     focus: Focus
 
-    constructor(
-        title: string,
-        blocks: Block[],
-        setStateCallback: any,
-        setMarksAndBlockUnderCursorCallback: (block: Block, marks: Mark[]) => void
-    ) {
+    constructor(title: string, blocks: Block[], setStateCallback: any, setMarksAndBlockUnderCursorCallback: (block: Block, marks: Mark[]) => void) {
         this.title = title
         this.blocks = blocks
         this.setStateCallback = setStateCallback
@@ -284,5 +279,5 @@ const joinBlocks = (lft: Block, rgt: Block): Block => {
         m.endPos += lftLen
     })
 
-    return { id: uuid.v4(), text: `${ lft.text }${ rgt.text }`, marks: [...lft.marks, ...rgt.marks] }
+    return { id: uuid.v4(), text: `${lft.text}${rgt.text}`, marks: [...lft.marks, ...rgt.marks] }
 }

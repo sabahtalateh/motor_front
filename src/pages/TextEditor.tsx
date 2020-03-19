@@ -142,11 +142,17 @@ class TextEditor extends React.Component<Props, State> {
 
     render() {
         return (
-            <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
-                <button onClick={ this.markHandler }>mark</button>
-                { this.state.marksUnderCursor.map(m => <button onClick={ () => this.dropMarks([m]) } key={ m.id }>Drop { m.id }</button>) }
-                { this.state.marksUnderCursor.length > 1 && <button onClick={ () => this.dropMarks(this.state.marksUnderCursor) }>Drop All Selected</button> }
-                { this.state.text.blocks.map(b => <TextBlockView key={ b.id } block={ b } editor={ this.editor } data-editor-element="editor" focused={ false }/>) }
+            <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
+                <button onClick={this.markHandler}>mark</button>
+                {this.state.marksUnderCursor.map(m => (
+                    <button onClick={() => this.dropMarks([m])} key={m.id}>
+                        Drop {m.id}
+                    </button>
+                ))}
+                {this.state.marksUnderCursor.length > 1 && <button onClick={() => this.dropMarks(this.state.marksUnderCursor)}>Drop All Selected</button>}
+                {this.state.text.blocks.map(b => (
+                    <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} />
+                ))}
             </div>
         )
     }
