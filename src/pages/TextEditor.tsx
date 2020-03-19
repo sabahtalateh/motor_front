@@ -124,10 +124,18 @@ class TextEditor extends React.Component<Props, State> {
         }
     }
 
-    markHandler = () => {
+    mark = () => {
         const focus = this.editor.getFocus()
         const focusBlock = this.editor.getFocusBlock()
         if (undefined !== focus && 'selection' === focus.type && undefined !== focusBlock) {
+            if (focus.selection.start === focus.selection.end) {
+                return
+            }
+            if (focus.selection.start > focus.selection.end) {
+                const end = focus.selection.start
+                focus.selection.start = focus.selection.end
+                focus.selection.end = end
+            }
             this.editor.mark(focusBlock, focus.selection)
         }
     }
@@ -143,7 +151,7 @@ class TextEditor extends React.Component<Props, State> {
     render() {
         return (
             <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
-                <button onClick={this.markHandler}>mark</button>
+                <button onClick={this.mark}>mark</button>
                 {this.state.marksUnderCursor.map(m => (
                     <button onClick={() => this.dropMarks([m])} key={m.id}>
                         Drop {m.id}

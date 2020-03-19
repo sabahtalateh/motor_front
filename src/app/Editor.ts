@@ -143,8 +143,8 @@ export class Editor {
                 const lastBlockMarks = b.marks
                     .filter(m => m.startPos >= paragraphs[0].end)
                     .map(m => {
-                        m.startPos -= paragraphs[paragraphs.length - 1].start
-                        m.endPos -= paragraphs[paragraphs.length - 1].start
+                        m.startPos -= paragraphs[paragraphs.length - 1].start - 1
+                        m.endPos -= paragraphs[paragraphs.length - 1].start - 1
                         return m
                     })
 

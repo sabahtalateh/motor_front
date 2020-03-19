@@ -15,6 +15,18 @@ interface State {
     focused: boolean
 }
 
+function trimTrailingBreaks(innerText: string) {
+    let trailingBreaks = 0
+    for (let i = innerText.length - 1; i != -1; i--) {
+        if ('\n' === innerText[i]) {
+            trailingBreaks++
+        } else {
+            break
+        }
+    }
+    return innerText.substr(0, innerText.length - trailingBreaks)
+}
+
 export default class TextBlockView extends React.Component<Props, State> {
     private editor: BlockEditor
     private prevInnerText: string
@@ -43,8 +55,9 @@ export default class TextBlockView extends React.Component<Props, State> {
         this.changeFired = true
         let innerText = e.currentTarget.innerText
         // \n вставляется в конец строки если вставить текст через ctrl+v так что вот так ёбана
-        if (innerText.trimRight() !== this.prevInnerText) {
-            innerText = innerText.trimRight()
+        const trimmed = trimTrailingBreaks(innerText)
+        if (trimmed !== this.prevInnerText) {
+            innerText = trimmed
         }
         if ('\n' === innerText) {
             innerText = ''
@@ -100,19 +113,19 @@ export default class TextBlockView extends React.Component<Props, State> {
     render() {
         return (
             <ContentEditable
-                id={this.props.block.id}
-                html={this.state.markup}
-                onChange={this.changeHandler}
-                onSelect={this.selectHandler}
-                onKeyUp={this.keyUpHandler}
+                id={ this.props.block.id }
+                html={ this.state.markup }
+                onChange={ this.changeHandler }
+                onSelect={ this.selectHandler }
+                onKeyUp={ this.keyUpHandler }
                 data-region-start="0"
                 data-editor-element="block"
-                style={{
+                style={ {
                     whiteSpace: 'pre-wrap',
                     border: '1px solid white',
                     borderBottom: 'none',
                     backgroundColor: '#FFEFD5',
-                }}
+                } }
             />
         )
     }
