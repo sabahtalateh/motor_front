@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../reducers'
 import TextBlockView from '../components/TextBlockView'
 import { Block, Editor } from '../app/Editor'
+import { Mark } from '../app/BlockEditor'
 
 interface Text {
     id: string
@@ -36,6 +37,8 @@ interface OwnProps {
 
 interface State {
     text: Text
+    marksUnderCursor: Mark[]
+    blockUnderCursor?: Block
 }
 
 const Control = 'Control'
@@ -61,6 +64,11 @@ class TextEditor extends React.Component<Props, State> {
                             id: 'm1',
                             startPos: 2,
                             endPos: 9,
+                        },
+                        {
+                            id: 'm2',
+                            startPos: 3,
+                            endPos: 8,
                         },
                         // {
                         //     id: 'm2',
@@ -93,8 +101,8 @@ class TextEditor extends React.Component<Props, State> {
             ],
         }
 
-        this.editor = new Editor(text.title, text.blocks, this.setState.bind(this))
-        this.state = { text: this.editor }
+        this.editor = new Editor(text.title, text.blocks, this.setState.bind(this), this.setMarksAndBlockUnderCursor)
+        this.state = { text: this.editor, marksUnderCursor: [] }
     }
 
     keyDownHandler = (e: any) => {
@@ -124,18 +132,21 @@ class TextEditor extends React.Component<Props, State> {
         }
     }
 
+    setMarksAndBlockUnderCursor = (block: Block, marks: Mark[]) => {
+        this.setState({ blockUnderCursor: block, marksUnderCursor: marks })
+    }
+
+    dropMarks = (marks: Mark[]) => {
+        this.editor.dropMarks(this.state.blockUnderCursor, marks)
+    }
+
     render() {
         return (
             <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
                 <button onClick={ this.markHandler }>mark</button>
-                { this.state.text.blocks.map(b => {
-                    return <TextBlockView key={ b.id }
-                                          block={ b }
-                                          editor={ this.editor }
-                                          data-editor-element="editor"
-                                          focused={ false }
-                    />
-                }) }
+                { this.state.marksUnderCursor.map(m => <button onClick={ () => this.dropMarks([m]) } key={ m.id }>Drop { m.id }</button>) }
+                { this.state.marksUnderCursor.length > 1 && <button onClick={ () => this.dropMarks(this.state.marksUnderCursor) }>Drop All Selected</button> }
+                { this.state.text.blocks.map(b => <TextBlockView key={ b.id } block={ b } editor={ this.editor } data-editor-element="editor" focused={ false }/>) }
             </div>
         )
     }

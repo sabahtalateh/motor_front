@@ -176,7 +176,7 @@ export class BlockEditor {
         } else if ('insert' === cmd.cmd) {
             const insertedText = cmd.insertText
             const insertedStart = cmd.position
-            const insertedLen = [...insertedText].length
+            const insertedLen = '\n' === insertedText ? 0 : [...insertedText].length
 
             this.block.marks.forEach(mark => {
                 if (mark.endPos >= insertedStart) {
@@ -259,7 +259,7 @@ const createMarkupChars = (block: Block): Markup => {
             }
 
             if (regionType === 'marks') {
-                markupChar.closeMarks = openedMarks.length
+                markupChar.closeMarks = openedMarks.length + closingMarks.length
             }
 
             if (regionOpenedAt === i) {

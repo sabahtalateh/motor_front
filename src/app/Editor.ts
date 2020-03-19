@@ -2,6 +2,7 @@ import { Mark } from './BlockEditor'
 import { Focus, placeFocus, Selection } from './Focus'
 import uuid = require('uuid')
 import { deep } from '../util/Deep'
+import set = Reflect.set
 
 interface Paragraph {
     text: string
@@ -27,15 +28,22 @@ export class Editor {
     title: string
     blocks: Block[]
     setStateCallback: any
+    setMarksUnderCursorCallback: (block: Block, marks: Mark[]) => void
     undoStack: Snapshot = []
     redoStack: Snapshot = []
     focusBlock: Block
     focus: Focus
 
-    constructor(title: string, blocks: Block[], setStateCallback: any) {
+    constructor(
+        title: string,
+        blocks: Block[],
+        setStateCallback: any,
+        setMarksAndBlockUnderCursorCallback: (block: Block, marks: Mark[]) => void
+    ) {
         this.title = title
         this.blocks = blocks
         this.setStateCallback = setStateCallback
+        this.setMarksUnderCursorCallback = setMarksAndBlockUnderCursorCallback
     }
 
     stackUndo = (block: Block, focus: Focus, cleanRedo: boolean = true) => {
@@ -93,8 +101,31 @@ export class Editor {
     }
 
     setFocus = (block: Block, focus: Focus) => {
+        const marksUnderCursor: Mark[] = []
         this.focusBlock = block
         this.focus = focus
+
+        if ('caret' === focus.type) {
+            for (let i = 0; i < block.marks.length; i++) {
+                const mark = block.marks[i]
+                if (mark.startPos <= focus.caret && mark.endPos >= focus.caret) {
+                    marksUnderCursor.push(mark)
+                }
+            }
+        }
+
+        this.setMarksUnderCursorCallback(this.focusBlock, marksUnderCursor)
+    }
+
+    dropMarks = (block: Block, marksToDrop: Mark[]) => {
+        this.stackUndo(block, this.focus)
+
+        const blockIdx = this.blocks.findIndex(b => block.id === b.id)
+        marksToDrop.findIndex(drop => {
+            this.blocks[blockIdx].marks = this.blocks[blockIdx].marks.filter(m => m.id !== drop.id)
+        })
+        this.blocks[blockIdx].id = uuid.v4()
+        this.setStateCallback({ text: this }, () => placeFocus(block, this.focus))
     }
 
     splitBlock = (block: Block, focusInsideInitiator: Focus) => {
@@ -191,10 +222,12 @@ export class Editor {
     }
 
     mark = (block: Block, selection: Selection) => {
+        this.stackUndo(block, this.getFocus())
+
         block.marks.push({
             id: uuid.v4(),
             startPos: selection.start,
-            endPos: selection.end
+            endPos: selection.end,
         })
         const blockIdx = this.blocks.findIndex(b => b.id === block.id)
         block.id = uuid.v4()
