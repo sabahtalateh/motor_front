@@ -18,24 +18,23 @@ export interface SectorLine {
     end: Coord
 }
 
-
 export interface TNode {
-    d: string,
-    p: number,
+    d: string
+    p: number
     c?: {
-        n?: TNode[],
+        n?: TNode[]
         // ne?: TNode[],
-        e?: TNode[],
+        e?: TNode[]
         // se?: TNode[],
-        s?: TNode[],
+        s?: TNode[]
         // sw?: TNode[],
-        w?: TNode[],
+        w?: TNode[]
         // nw?: TNode[]
     }
 }
 
 interface RenderedTNode {
-    node: TNode,
+    node: TNode
     coord: NodeProps
 }
 
@@ -51,7 +50,7 @@ const drawTree = (svg: any, tree: TNode, nodeSide?: Side, parent?: RenderedTNode
                 x: 100,
                 y: 200,
             },
-            angle: 0
+            angle: 0,
         }
     } else {
         coord = {
@@ -59,7 +58,7 @@ const drawTree = (svg: any, tree: TNode, nodeSide?: Side, parent?: RenderedTNode
                 x: 151,
                 y: 200,
             },
-            angle: 0
+            angle: 0,
         }
     }
 
@@ -123,7 +122,7 @@ const drawNodeWithDeps = (svg: any, nodeProps: NodeProps, nodeSide?: Side, rende
         .attr('fill', 'grey')
 
     const deg = -nodeProps.angle - 180
-    const rad = deg * Math.PI / 180
+    const rad = (deg * Math.PI) / 180
     g.append('circle')
         .attr('cx', cx + radius * Math.sin(rad))
         .attr('cy', cy + radius * Math.cos(rad))
@@ -135,17 +134,17 @@ const drawNodeWithDeps = (svg: any, nodeProps: NodeProps, nodeSide?: Side, rende
     const degInSector = 360 / nSectors
     for (let i = nSectors; i > 0; i--) {
         const deg = i * degInSector + (degInSector / 2 - nodeProps.angle)
-        const rad = deg * Math.PI / 180
+        const rad = (deg * Math.PI) / 180
 
         const sectorLine: SectorLine = {
             start: {
                 x: cx + smallOuterCircleRadius * Math.sin(rad),
-                y: cy + smallOuterCircleRadius * Math.cos(rad)
+                y: cy + smallOuterCircleRadius * Math.cos(rad),
             },
             end: {
                 x: cx + largeOuterCircleRadius * Math.sin(rad),
-                y: cy + largeOuterCircleRadius * Math.cos(rad)
-            }
+                y: cy + largeOuterCircleRadius * Math.cos(rad),
+            },
         }
 
         // Draw sector line

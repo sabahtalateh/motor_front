@@ -193,14 +193,12 @@ export class BlockEditor {
                 }
             })
 
-            this.block.text = `${ content.slice(0, removedFrom) }${ content.slice(removedTo, content.length) }`
+            this.block.text = `${content.slice(0, removedFrom)}${content.slice(removedTo, content.length)}`
         } else if ('insert' === cmd.cmd) {
             const insertedText = cmd.insertText
             const insertedStart = cmd.position
 
-            const insertedLen = 0 === insertedText.replace(/\n/g, '').length
-                ? insertedText.length - 1
-                : insertedText.length
+            const insertedLen = 0 === insertedText.replace(/\n/g, '').length ? insertedText.length - 1 : insertedText.length
 
             this.block.marks.forEach(mark => {
                 if (mark.endPos >= insertedStart) {
@@ -211,7 +209,7 @@ export class BlockEditor {
                 }
             })
 
-            this.block.text = `${ content.slice(0, insertedStart) }${ insertedText }${ content.slice(insertedStart, content.length) }`
+            this.block.text = `${content.slice(0, insertedStart)}${insertedText}${content.slice(insertedStart, content.length)}`
         }
     }
 }
@@ -322,28 +320,28 @@ const createMarkupString = (markup: Markup) => {
         if (textClose && marksOpens) {
             markupString += `</span>`
             markupChar.openMarks.forEach(m => {
-                markupString += `<mark data-mark-id="${ m }" data-region-start="${ i }" data-region-end="${ markupChar.regionEnd }">`
+                markupString += `<mark data-mark-id="${m}" data-region-start="${i}" data-region-end="${markupChar.regionEnd}">`
             })
             markupString += markupChar.char
         } else if (marksClose && textOpens) {
             markupString += `</mark>`.repeat(markupChar.closeMarks)
-            markupString += `<span data-region-start="${ i }" data-region-end="${ markupChar.regionEnd }">`
+            markupString += `<span data-region-start="${i}" data-region-end="${markupChar.regionEnd}">`
             markupString += markupChar.char
         } else if (marksOpens && marksClose) {
             markupString += `</mark>`.repeat(markupChar.closeMarks)
             markupChar.openMarks.forEach(m => {
-                markupString += `<mark data-mark-id="${ m }" data-region-start="${ i }" data-region-end="${ markupChar.regionEnd }">`
+                markupString += `<mark data-mark-id="${m}" data-region-start="${i}" data-region-end="${markupChar.regionEnd}">`
             })
             markupString += markupChar.char
         } else {
             if (marksOpens) {
                 markupChar.openMarks.forEach(m => {
-                    markupString += `<mark data-mark-id="${ m }" data-region-start="${ i }" data-region-end="${ markupChar.regionEnd }">`
+                    markupString += `<mark data-mark-id="${m}" data-region-start="${i}" data-region-end="${markupChar.regionEnd}">`
                 })
             }
 
             if (textOpens) {
-                markupString += `<span data-region-start="${ i }" data-region-end="${ markupChar.regionEnd }">`
+                markupString += `<span data-region-start="${i}" data-region-end="${markupChar.regionEnd}">`
             }
 
             markupString += markupChar.char

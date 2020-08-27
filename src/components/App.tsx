@@ -22,16 +22,16 @@ export class App extends React.Component<{}, {}> {
     render(): JSX.Element {
         return (
             <Wrapper>
-                <GlobalStyle/>
+                <GlobalStyle />
                 <nav>
                     <Link to="/">Home</Link>
                     <Link to="/diagrams/new">New Diagram</Link>
                 </nav>
                 <Switch>
-                    <Route path="/" component={ Home } exact/>
-                    <Route path="/diagrams/new" component={ NewDiagram } exact/>
-                    <Route path="/text/:id" component={ EditorPage } exact/>
-                    <Route render={ () => <h1>404</h1> }/>
+                    <Route path="/" component={Home} exact />
+                    <Route path="/diagrams/new" component={NewDiagram} exact />
+                    <Route path="/text/:id" component={EditorPage} exact />
+                    <Route render={() => <h1>404</h1>} />
                 </Switch>
             </Wrapper>
         )

@@ -158,38 +158,39 @@ class EditorPage extends React.Component<Props, State> {
 
     render() {
         return (
-            <div style={ {
-                minWidth: '600px'
-            } }>
-                <div style={ {
-                    width: '50%',
-                    display: 'inline-block',
-                    verticalAlign: 'top'
-                } } onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
-                    <button onClick={ this.mark }>mark</button>
-                    { this.state.marksUnderCursor.map(m => (
-                        <button onClick={ () => this.dropMarks([m]) } key={ m.id }>
-                            Drop { m.id }
+            <div
+                style={{
+                    minWidth: '600px',
+                }}
+            >
+                <div
+                    style={{
+                        width: '50%',
+                        display: 'inline-block',
+                        verticalAlign: 'top',
+                    }}
+                    onKeyDown={this.keyDownHandler}
+                    onKeyUp={this.keyUpHandler}
+                >
+                    <button onClick={this.mark}>mark</button>
+                    {this.state.marksUnderCursor.map(m => (
+                        <button onClick={() => this.dropMarks([m])} key={m.id}>
+                            Drop {m.id}
                         </button>
-                    )) }
-                    { this.state.marksUnderCursor.length > 1 &&
-                    <button onClick={ () => this.dropMarks(this.state.marksUnderCursor) }>Drop All Selected</button> }
-                    { this.state.text.blocks.map(b => (
-                        <TextBlockView key={ b.id }
-                                       block={ b }
-                                       editor={ this.editor }
-                                       data-editor-element="editor"
-                                       focused={ false }
-                                       width="100%"
-                        />
-                    )) }
+                    ))}
+                    {this.state.marksUnderCursor.length > 1 && <button onClick={() => this.dropMarks(this.state.marksUnderCursor)}>Drop All Selected</button>}
+                    {this.state.text.blocks.map(b => (
+                        <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} width="100%" />
+                    ))}
                 </div>
-                <div style={ {
-                    width: '50%',
-                    display: 'inline-block',
-                    verticalAlign: 'top'
-                } }>
-                    <Graph/>
+                <div
+                    style={{
+                        width: '50%',
+                        display: 'inline-block',
+                        verticalAlign: 'top',
+                    }}
+                >
+                    <Graph />
                 </div>
             </div>
         )
