@@ -94,7 +94,7 @@ const jjj = (blockId: string, pos: number) => {
         let nodeRegionStart
         for (let i = 0; i < area.childNodes.length; i++) {
             const checkingNode: any = area.childNodes[i]
-            // 1 - Node
+            // 1 - TNode
             const regionStart = Number.parseInt(checkingNode.dataset.regionStart)
             const regionEnd = Number.parseInt(checkingNode.dataset.regionEnd)
             if (1 === checkingNode.nodeType && regionStart <= focusAbsolutePosition && regionEnd >= focusAbsolutePosition) {

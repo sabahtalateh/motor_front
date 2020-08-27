@@ -132,21 +132,28 @@ export class Editor {
         this.blocks.forEach(b => {
             if (b.id === block.id) {
                 const paragraphs = splitTextToParagraphs(block.text, cursorPositionBeforeRebuild)
-
-                const firstBlockMarks = b.marks.filter(m => m.startPos < paragraphs[0].end)
-                firstBlockMarks.forEach(m => {
+                console.log(paragraphs)
+                const first_block_marks = b.marks.filter(m => m.startPos < paragraphs[0].end)
+                first_block_marks.forEach(m => {
                     if (m.endPos >= cursorPositionBeforeRebuild) {
                         m.endPos = cursorPositionBeforeRebuild - 1
                     }
                 })
 
+                let marks_position_sub = 0
+                if (paragraphs[0].text === '' || paragraphs.length <= 2) {
+                    marks_position_sub = 1
+                }
+
                 const lastBlockMarks = b.marks
-                    .filter(m => m.startPos >= paragraphs[0].end)
+                    .filter(m => m.startPos >= paragraphs[paragraphs.length - 2].end)
                     .map(m => {
-                        m.startPos -= paragraphs[paragraphs.length - 1].start - 1
-                        m.endPos -= paragraphs[paragraphs.length - 1].start - 1
+                        m.startPos -= paragraphs[paragraphs.length - 1].start - marks_position_sub
+                        m.endPos -= paragraphs[paragraphs.length - 1].start - marks_position_sub
                         return m
                     })
+
+                console.log(lastBlockMarks)
 
                 paragraphs.forEach((paragraph, index) => {
                     let marks: Mark[] = []
@@ -161,7 +168,7 @@ export class Editor {
                         focusBlock = block
                         focusPosition = paragraph.caret
                     } else if (0 === index) {
-                        marks = firstBlockMarks
+                        marks = first_block_marks
                         rebuilt.push({
                             id: uuid.v4(),
                             text: paragraph.text,

@@ -9,6 +9,7 @@ import { AppState } from '../reducers'
 import TextBlockView from '../components/TextBlockView'
 import { Block, Editor } from '../app/Editor'
 import { Mark } from '../app/BlockEditor'
+import Graph from '../components/Graph'
 
 interface Text {
     id: string
@@ -45,7 +46,7 @@ const Control = 'Control'
 const Meta = 'Meta'
 const Shift = 'Shift'
 
-class TextEditor extends React.Component<Props, State> {
+class EditorPage extends React.Component<Props, State> {
     private readonly editor: Editor
     private specialKeysPressed: string[] = []
 
@@ -69,6 +70,11 @@ class TextEditor extends React.Component<Props, State> {
                             id: 'm2',
                             startPos: 3,
                             endPos: 8,
+                        },
+                        {
+                            id: 'm3',
+                            startPos: 17,
+                            endPos: 23,
                         },
                         // {
                         //     id: 'm2',
@@ -141,7 +147,9 @@ class TextEditor extends React.Component<Props, State> {
     }
 
     setMarksAndBlockUnderCursor = (block: Block, marks: Mark[]) => {
-        this.setState({ blockUnderCursor: block, marksUnderCursor: marks })
+        console.log(block, marks)
+        // TODO создать отдельный компонент для действий с марками, в текущем виде глючит
+        // this.setState({ blockUnderCursor: block, marksUnderCursor: marks })
     }
 
     dropMarks = (marks: Mark[]) => {
@@ -150,17 +158,39 @@ class TextEditor extends React.Component<Props, State> {
 
     render() {
         return (
-            <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
-                <button onClick={this.mark}>mark</button>
-                {this.state.marksUnderCursor.map(m => (
-                    <button onClick={() => this.dropMarks([m])} key={m.id}>
-                        Drop {m.id}
-                    </button>
-                ))}
-                {this.state.marksUnderCursor.length > 1 && <button onClick={() => this.dropMarks(this.state.marksUnderCursor)}>Drop All Selected</button>}
-                {this.state.text.blocks.map(b => (
-                    <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} />
-                ))}
+            <div style={ {
+                minWidth: '600px'
+            } }>
+                <div style={ {
+                    width: '50%',
+                    display: 'inline-block',
+                    verticalAlign: 'top'
+                } } onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
+                    <button onClick={ this.mark }>mark</button>
+                    { this.state.marksUnderCursor.map(m => (
+                        <button onClick={ () => this.dropMarks([m]) } key={ m.id }>
+                            Drop { m.id }
+                        </button>
+                    )) }
+                    { this.state.marksUnderCursor.length > 1 &&
+                    <button onClick={ () => this.dropMarks(this.state.marksUnderCursor) }>Drop All Selected</button> }
+                    { this.state.text.blocks.map(b => (
+                        <TextBlockView key={ b.id }
+                                       block={ b }
+                                       editor={ this.editor }
+                                       data-editor-element="editor"
+                                       focused={ false }
+                                       width="100%"
+                        />
+                    )) }
+                </div>
+                <div style={ {
+                    width: '50%',
+                    display: 'inline-block',
+                    verticalAlign: 'top'
+                } }>
+                    <Graph/>
+                </div>
             </div>
         )
     }
@@ -175,4 +205,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps): Dispat
     }
 }
 
-export default withGraphQLService(connect<any, any, any>(mapStateToProps, mapDispatchToProps)(TextEditor))
+export default withGraphQLService(connect<any, any, any>(mapStateToProps, mapDispatchToProps)(EditorPage))

@@ -8,6 +8,7 @@ interface Props {
     block: Block
     editor: Editor
     focused: boolean
+    width: string
 }
 
 interface State {
@@ -45,7 +46,7 @@ export default class TextBlockView extends React.Component<Props, State> {
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
         // Place focus only if markup changed to prevent focusing when editor rebuilds
         //  because of new lines were added
-        const lenDiffers = [...this.state.markup].length !== [...prevState.markup].length
+        const lenDiffers = this.state.markup.length !== prevState.markup.length
         if (lenDiffers || this.state.markup !== prevState.markup) {
             placeFocus(this.editor.getBlock(), this.editor.getFocus())
         }
@@ -113,19 +114,20 @@ export default class TextBlockView extends React.Component<Props, State> {
     render() {
         return (
             <ContentEditable
-                id={this.props.block.id}
-                html={this.state.markup}
-                onChange={this.changeHandler}
-                onSelect={this.selectHandler}
-                onKeyUp={this.keyUpHandler}
+                id={ this.props.block.id }
+                html={ this.state.markup }
+                onChange={ this.changeHandler }
+                onSelect={ this.selectHandler }
+                onKeyUp={ this.keyUpHandler }
                 data-region-start="0"
                 data-editor-element="block"
-                style={{
+                style={ {
                     whiteSpace: 'pre-wrap',
                     border: '1px solid white',
                     borderBottom: 'none',
                     backgroundColor: '#FFEFD5',
-                }}
+                    width: this.props.width
+                } }
             />
         )
     }
