@@ -34,11 +34,7 @@ export class Editor {
     focusBlock: Block
     focus: Focus
 
-    constructor(
-        title: string,
-        blocks: Block[],
-        setEditorStateCallback: any
-    ) {
+    constructor(title: string, blocks: Block[], setEditorStateCallback: any) {
         this.title = title
         this.blocks = blocks
         this.setStateCallback = setEditorStateCallback
@@ -117,10 +113,7 @@ export class Editor {
             console.log(focus.selection)
             for (let i = 0; i < block.marks.length; i++) {
                 const mark = block.marks[i]
-                if (
-                    (sel.start <= mark.startPos && sel.end >= mark.startPos)
-                    || (sel.start >= mark.startPos && sel.start <= mark.endPos)
-                ) {
+                if ((sel.start <= mark.startPos && sel.end >= mark.startPos) || (sel.start >= mark.startPos && sel.start <= mark.endPos)) {
                     marksUnderCursor.push(mark)
                 }
             }
@@ -303,5 +296,5 @@ const joinBlocks = (lft: Block, rgt: Block): Block => {
         m.endPos += lftLen
     })
 
-    return { id: uuid.v4(), text: `${ lft.text }${ rgt.text }`, marks: [...lft.marks, ...rgt.marks] }
+    return { id: uuid.v4(), text: `${lft.text}${rgt.text}`, marks: [...lft.marks, ...rgt.marks] }
 }
