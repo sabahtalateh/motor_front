@@ -10,6 +10,7 @@ import TextBlockView from '../components/TextBlockView'
 import { Block, Editor } from '../app/Editor'
 import { Mark } from '../app/BlockEditor'
 import Graph from '../components/Graph'
+import MarksActions from '../components/MarksActions'
 
 interface Text {
     id: string
@@ -107,7 +108,12 @@ class EditorPage extends React.Component<Props, State> {
             ],
         }
 
-        this.editor = new Editor(text.title, text.blocks, this.setState.bind(this), this.setMarksAndBlockUnderCursor)
+        this.editor = new Editor(
+            text.title,
+            text.blocks,
+            this.setState.bind(this)
+            // this.setMarksAndBlockUnderCursor
+        )
         this.state = { text: this.editor, marksUnderCursor: [] }
     }
 
@@ -146,51 +152,15 @@ class EditorPage extends React.Component<Props, State> {
         }
     }
 
-    setMarksAndBlockUnderCursor = (block: Block, marks: Mark[]) => {
-        console.log(block, marks)
-        // TODO создать отдельный компонент для действий с марками, в текущем виде глючит
-        // this.setState({ blockUnderCursor: block, marksUnderCursor: marks })
-    }
-
-    dropMarks = (marks: Mark[]) => {
-        this.editor.dropMarks(this.state.blockUnderCursor, marks)
-    }
-
     render() {
         return (
-            <div
-                style={{
-                    minWidth: '600px',
-                }}
-            >
-                <div
-                    style={{
-                        width: '50%',
-                        display: 'inline-block',
-                        verticalAlign: 'top',
-                    }}
-                    onKeyDown={this.keyDownHandler}
-                    onKeyUp={this.keyUpHandler}
-                >
-                    <button onClick={this.mark}>mark</button>
-                    {this.state.marksUnderCursor.map(m => (
-                        <button onClick={() => this.dropMarks([m])} key={m.id}>
-                            Drop {m.id}
-                        </button>
-                    ))}
-                    {this.state.marksUnderCursor.length > 1 && <button onClick={() => this.dropMarks(this.state.marksUnderCursor)}>Drop All Selected</button>}
-                    {this.state.text.blocks.map(b => (
-                        <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} width="100%" />
-                    ))}
-                </div>
-                <div
-                    style={{
-                        width: '50%',
-                        display: 'inline-block',
-                        verticalAlign: 'top',
-                    }}
-                >
-                    <Graph />
+            <div>
+                <MarksActions createMark={ this.mark } editor={ this.editor }/>
+                <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
+                    { this.state.text.blocks.map(b => (
+                        <TextBlockView key={ b.id } block={ b } editor={ this.editor } data-editor-element="editor"
+                                       focused={ false } width="100%"/>
+                    )) }
                 </div>
             </div>
         )
