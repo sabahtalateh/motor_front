@@ -48,7 +48,7 @@ class LoginModal extends React.Component<Props, State> {
                 // backdrop='static'
                 centered
                 keyboard={false}
-                animation={ false }
+                animation={false}
             >
                 <Modal.Body>
                     {!this.props.loginRequested && this.props.loginFailed && (
