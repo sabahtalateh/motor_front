@@ -32,13 +32,15 @@ class LoginModal extends React.Component<Props, State> {
         this.passwordInput = React.createRef()
     }
 
+    componentDidMount() {
+        this.usernameInput.current.focus()
+    }
+
     componentWillUnmount() {
         document.body.removeChild(this.portalNode)
     }
 
     render() {
-        console.log(this.props.loginRequested)
-
         return ReactDOM.createPortal(
             <Modal
                 show={this.props.show}
@@ -46,11 +48,11 @@ class LoginModal extends React.Component<Props, State> {
                 // backdrop='static'
                 centered
                 keyboard={false}
-                // animation={ false }
+                animation={ false }
             >
                 <Modal.Body>
                     {!this.props.loginRequested && this.props.loginFailed && (
-                        <Alert variant="danger">
+                        <Alert variant='danger'>
                             <Alert.Heading>Login failed</Alert.Heading>
                             <p>Please recheck login and password</p>
                         </Alert>
@@ -59,17 +61,23 @@ class LoginModal extends React.Component<Props, State> {
                     <Form>
                         <Form.Group>
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control disabled={this.props.loginRequested} type="email" placeholder="Enter email" ref={this.usernameInput} />
+                            <Form.Control
+                                autoFocus={true}
+                                disabled={this.props.loginRequested}
+                                type='email'
+                                placeholder='Enter email'
+                                ref={this.usernameInput}
+                            />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control disabled={this.props.loginRequested} type="password" placeholder="Password" ref={this.passwordInput} />
+                            <Form.Control disabled={this.props.loginRequested} type='password' placeholder='Password' ref={this.passwordInput} />
                         </Form.Group>
                         <Button
                             disabled={this.props.loginRequested}
-                            variant="primary"
-                            type="submit"
+                            variant='primary'
+                            type='submit'
                             onClick={(e: any) => {
                                 e.preventDefault()
                                 this.props.onSubmit(this.usernameInput.current.value, this.passwordInput.current.value)
@@ -77,7 +85,7 @@ class LoginModal extends React.Component<Props, State> {
                         >
                             Submit
                         </Button>
-                        {this.props.loginRequested && <Spinner animation="border" size="lg" style={{ float: 'right' }} />}
+                        {this.props.loginRequested && <Spinner animation='border' size='lg' style={{ float: 'right' }} />}
                     </Form>
                 </Modal.Body>
             </Modal>,

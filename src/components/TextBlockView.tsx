@@ -119,8 +119,8 @@ export default class TextBlockView extends React.Component<Props, State> {
                 onChange={this.changeHandler}
                 onSelect={this.selectHandler}
                 onKeyUp={this.keyUpHandler}
-                data-region-start="0"
-                data-editor-element="block"
+                data-region-start='0'
+                data-editor-element='block'
                 style={{
                     whiteSpace: 'pre-wrap',
                     border: '1px solid white',

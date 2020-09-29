@@ -7,24 +7,10 @@ import { Dispatch } from 'react'
 import GraphQLService from '../services/GraphQLService'
 import { fetchMyStack } from '../actions/creators/creators'
 import EditorPage from './EditorPage'
+import { Token } from '../reducers/authReducer'
+import { Redirect } from 'react-router-dom'
 
 interface Props extends StateProps, DispatchProps {}
-
-interface StateProps {
-    // access: string
-    // refresh: string
-    stack: string[]
-    loading: boolean
-    error: boolean
-}
-
-interface OwnProps {
-    graphQLService: GraphQLService
-}
-
-interface DispatchProps {
-    fetchMyStack: (access: string) => void
-}
 
 class MyStackPage extends React.Component<Props, {}> {
     componentDidMount() {
@@ -39,6 +25,9 @@ class MyStackPage extends React.Component<Props, {}> {
     }
 
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>, snapshot?: any) {
+        // if (prevProps.token !== null && this.props.token === null) {
+        //
+        // }
         // console.log('UU')
         //
         // console.log(this.props.accessToken)
@@ -52,6 +41,10 @@ class MyStackPage extends React.Component<Props, {}> {
     }
 
     render() {
+        if (!this.props.token) {
+            return <Redirect to='/' />
+        }
+
         // if (!this.props.accessToken) {
         //     return <div>Login required</div>
         // }
@@ -65,7 +58,31 @@ class MyStackPage extends React.Component<Props, {}> {
     }
 }
 
-const mapStateToProps = ({ auth: { token }, myStack: { stack, loading, error } }: AppState): StateProps => ({ stack, loading: true, error })
+interface StateProps {
+    // access: string
+    // refresh: string
+    token: Token
+
+    stack: string[]
+    loading: boolean
+    error: boolean
+}
+
+interface OwnProps {
+    graphQLService: GraphQLService
+}
+
+interface DispatchProps {
+    fetchMyStack: (access: string) => void
+}
+
+const mapStateToProps = ({ auth: { token }, myStack: { stack, loading, error } }: AppState): StateProps => ({
+    token,
+
+    stack,
+    loading: true,
+    error,
+})
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps): DispatchProps => {
     const { graphQLService } = ownProps

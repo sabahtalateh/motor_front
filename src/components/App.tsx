@@ -109,7 +109,16 @@ class App extends React.Component<Props, State> {
                                     <Navbar bg='light'>
                                         <Navbar.Collapse>
                                             <Nav className='mr-auto'>
-                                                {/*    <Nav.Link href='#home'>Home</Nav.Link>*/}
+                                                <Link className='nav-link' to='/'>
+                                                    Home
+                                                </Link>
+                                                {this.props.token && (
+                                                    <Link className='nav-link' to='/stack/my'>
+                                                        My Stack
+                                                    </Link>
+                                                )}
+
+                                                {/*<Nav.Link href='#home'>My Stack</Nav.Link>*/}
                                                 {/*<Nav.Link href='#link'>Link</Nav.Link>*/}
                                                 {/*<NavDropdown title='Dropdown' id='basic-nav-dropdown'>*/}
                                                 {/*    <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>*/}
