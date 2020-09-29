@@ -106,9 +106,9 @@ class App extends React.Component<Props, State> {
                             <GlobalStyle />
                             <Row>
                                 <Col>
-                                    <Navbar bg='light'>
+                                    <Navbar bg="light">
                                         <Navbar.Collapse>
-                                            <Nav className='mr-auto'>
+                                            <Nav className="mr-auto">
                                                 {/*    <Nav.Link href='#home'>Home</Nav.Link>*/}
                                                 {/*<Nav.Link href='#link'>Link</Nav.Link>*/}
                                                 {/*<NavDropdown title='Dropdown' id='basic-nav-dropdown'>*/}
@@ -121,7 +121,7 @@ class App extends React.Component<Props, State> {
                                             </Nav>
                                             {!this.props.token && (
                                                 <Button
-                                                    variant='dark'
+                                                    variant="dark"
                                                     onClick={() => {
                                                         this.setState({ loginOpen: true })
                                                     }}
@@ -132,7 +132,7 @@ class App extends React.Component<Props, State> {
                                             {this.props.token && <Button>Profile</Button>}
                                             &nbsp;
                                             {this.props.token && (
-                                                <Button variant='dark' onClick={this.props.logout}>
+                                                <Button variant="dark" onClick={this.props.logout}>
                                                     Logout
                                                 </Button>
                                             )}
@@ -147,8 +147,8 @@ class App extends React.Component<Props, State> {
                             {/*    <Link to='/diagrams/new'>New Diagram</Link>*/}
                             {/*</nav>*/}
                             <Switch>
-                                <Route path='/' component={Home} exact />
-                                <Route path='/stack/my' component={MyStack} exact />
+                                <Route path="/" component={Home} exact />
+                                <Route path="/stack/my" component={MyStack} exact />
                                 {/*<Route path='/diagrams/new' component={ NewDiagram } exact/>*/}
                                 {/*<Route path='/text/:id' component={ EditorPage } exact/>*/}
                                 <Route render={() => <h1>404</h1>} />
