@@ -52,8 +52,7 @@ interface State {
     loginOpen: boolean
 }
 
-interface Props extends StateProps, DispatchProps {
-}
+interface Props extends StateProps, DispatchProps {}
 
 class App extends React.Component<Props, State> {
     constructor(props: Readonly<Props>) {
@@ -71,7 +70,7 @@ class App extends React.Component<Props, State> {
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
         if (prevProps.token === null && this.props.token !== null) {
             this.setState({
-                loginOpen: false
+                loginOpen: false,
             })
         }
     }
@@ -87,89 +86,85 @@ class App extends React.Component<Props, State> {
 
         return (
             <Wrapper>
-                { this.props.token && (
+                {this.props.token && (
                     <>
-                        <h1>{ this.props.token.access }</h1>
-                        <h1>{ this.props.token.refresh }</h1>
+                        <h1>{this.props.token.access}</h1>
+                        <h1>{this.props.token.refresh}</h1>
                     </>
-                ) }
+                )}
 
-                { this.props.readingAuthCookie && (
+                {this.props.readingAuthCookie && (
                     <>
-                        { spinners.map((x, i) => (
-                            <Spinner key={ i } style={ { margin: '76px' } } variant={ x.var }
-                                     animation={ x.animation }/>
-                        )) }
+                        {spinners.map((x, i) => (
+                            <Spinner key={i} style={{ margin: '76px' }} variant={x.var} animation={x.animation} />
+                        ))}
                     </>
-                ) }
-                { !this.props.readingAuthCookie && (
+                )}
+                {!this.props.readingAuthCookie && (
                     <>
                         <Container>
-                            <GlobalStyle/>
+                            <GlobalStyle />
                             <Row>
                                 <Col>
-                                    <Navbar bg='light'>
+                                    <Navbar bg="light">
                                         <Navbar.Collapse>
-                                            <Nav className='mr-auto'>
-                                                {/*    <Nav.Link href='#home'>Home</Nav.Link>*/ }
-                                                {/*<Nav.Link href='#link'>Link</Nav.Link>*/ }
-                                                {/*<NavDropdown title='Dropdown' id='basic-nav-dropdown'>*/ }
-                                                {/*    <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>*/ }
-                                                {/*    <NavDropdown.Item href='#action/3.2'>Another action</NavDropdown.Item>*/ }
-                                                {/*    <NavDropdown.Item href='#action/3.3'>Something</NavDropdown.Item>*/ }
-                                                {/*    <NavDropdown.Divider />*/ }
-                                                {/*    <NavDropdown.Item href='#action/3.4'>Separated link</NavDropdown.Item>*/ }
-                                                {/*</NavDropdown>*/ }
+                                            <Nav className="mr-auto">
+                                                {/*    <Nav.Link href='#home'>Home</Nav.Link>*/}
+                                                {/*<Nav.Link href='#link'>Link</Nav.Link>*/}
+                                                {/*<NavDropdown title='Dropdown' id='basic-nav-dropdown'>*/}
+                                                {/*    <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>*/}
+                                                {/*    <NavDropdown.Item href='#action/3.2'>Another action</NavDropdown.Item>*/}
+                                                {/*    <NavDropdown.Item href='#action/3.3'>Something</NavDropdown.Item>*/}
+                                                {/*    <NavDropdown.Divider />*/}
+                                                {/*    <NavDropdown.Item href='#action/3.4'>Separated link</NavDropdown.Item>*/}
+                                                {/*</NavDropdown>*/}
                                             </Nav>
-                                            { !this.props.token && (
+                                            {!this.props.token && (
                                                 <Button
-                                                    variant='dark'
-                                                    onClick={ () => {
+                                                    variant="dark"
+                                                    onClick={() => {
                                                         this.setState({ loginOpen: true })
-                                                    } }
+                                                    }}
                                                 >
                                                     Login
                                                 </Button>
-                                            ) }
-                                            { this.props.token && <Button>Profile</Button> }
+                                            )}
+                                            {this.props.token && <Button>Profile</Button>}
                                             &nbsp;
-                                            { this.props.token &&
-                                            <Button
-                                                variant='dark'
-                                                onClick={ this.props.logout }
-                                            >
-                                                Logout
-                                            </Button>
-                                            }
+                                            {this.props.token && (
+                                                <Button variant="dark" onClick={this.props.logout}>
+                                                    Logout
+                                                </Button>
+                                            )}
                                         </Navbar.Collapse>
                                     </Navbar>
                                 </Col>
                             </Row>
-                            {/*<nav>*/ }
-                            {/*    <Button>123</Button>*/ }
-                            {/*    <Link to='/'>Home</Link>*/ }
-                            {/*    <Link to='/stack/my'>My Stack</Link>*/ }
-                            {/*    <Link to='/diagrams/new'>New Diagram</Link>*/ }
-                            {/*</nav>*/ }
+                            {/*<nav>*/}
+                            {/*    <Button>123</Button>*/}
+                            {/*    <Link to='/'>Home</Link>*/}
+                            {/*    <Link to='/stack/my'>My Stack</Link>*/}
+                            {/*    <Link to='/diagrams/new'>New Diagram</Link>*/}
+                            {/*</nav>*/}
                             <Switch>
-                                <Route path='/' component={ Home } exact/>
-                                <Route path='/stack/my' component={ MyStack } exact/>
-                                {/*<Route path='/diagrams/new' component={ NewDiagram } exact/>*/ }
-                                {/*<Route path='/text/:id' component={ EditorPage } exact/>*/ }
-                                <Route render={ () => <h1>404</h1> }/>
+                                <Route path="/" component={Home} exact />
+                                <Route path="/stack/my" component={MyStack} exact />
+                                {/*<Route path='/diagrams/new' component={ NewDiagram } exact/>*/}
+                                {/*<Route path='/text/:id' component={ EditorPage } exact/>*/}
+                                <Route render={() => <h1>404</h1>} />
                             </Switch>
                         </Container>
-                        { this.state.loginOpen && (
+                        {this.state.loginOpen && (
                             <LoginModal
-                                show={ this.state.loginOpen }
-                                onClose={ () => {
+                                show={this.state.loginOpen}
+                                onClose={() => {
                                     this.setState({ loginOpen: false })
-                                } }
-                                onSubmit={ (username: string, password: string) => this.props.login(username, password) }
+                                }}
+                                onSubmit={(username: string, password: string) => this.props.login(username, password)}
                             />
-                        ) }
+                        )}
                     </>
-                ) }
+                )}
             </Wrapper>
         )
     }

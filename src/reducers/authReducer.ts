@@ -80,7 +80,7 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
                 loginRequested: false,
                 loginSuccess: false,
                 loginFailed: false,
-                readingAuthCookie: false
+                readingAuthCookie: false,
             }
     }
 
