@@ -6,7 +6,7 @@ import { authReducer } from './authReducer'
 export const rootReducer = combineReducers({
     text: textReducer,
     myStack: myStackReducer,
-    auth: authReducer
+    auth: authReducer,
 })
 
 export type AppState = ReturnType<typeof rootReducer>

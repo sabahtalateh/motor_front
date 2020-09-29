@@ -20,7 +20,7 @@ export const myStackReducer = (state: MyStackState = myStackInitialState, action
         case MyStackActions.LOADED:
             return {
                 ...state,
-                stack: action.payload
+                stack: action.payload,
             }
     }
 

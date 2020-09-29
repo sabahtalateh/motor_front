@@ -1,7 +1,6 @@
 import { AuthActions } from '../actions/actions'
 
 interface AuthReducerState {
-    noAuthCookie: boolean
     readingAuthCookie: boolean
 
     loginRequested: boolean
@@ -11,18 +10,17 @@ interface AuthReducerState {
 }
 
 const authInitialState: AuthReducerState = {
-    noAuthCookie: false,
     readingAuthCookie: true,
 
     loginRequested: false,
     loginSuccess: false,
     loginFailed: false,
 
-    token: null
+    token: null,
 }
 
 export interface Token {
-    access: string,
+    access: string
     refresh: string
 }
 
@@ -32,24 +30,21 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
             return {
                 ...state,
                 readingAuthCookie: true,
-                noAuthCookie: false,
-                token: null
+                token: null,
             }
 
         case AuthActions.TOKEN_FROM_COOKIE_READ:
             return {
                 ...state,
                 readingAuthCookie: false,
-                noAuthCookie: false,
-                token: action.payload
+                token: action.payload,
             }
 
         case AuthActions.AUTH_COOKIE_NOT_FOUND:
             return {
                 ...state,
                 readingAuthCookie: false,
-                noAuthCookie: true,
-                token: null
+                token: null,
             }
 
         case AuthActions.LOGIN_REQUESTED:
@@ -67,7 +62,7 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
                 token: action.payload,
                 loginRequested: false,
                 loginSuccess: true,
-                loginFailed: false
+                loginFailed: false,
             }
 
         case AuthActions.LOGIN_FAILED:
@@ -76,7 +71,16 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
                 token: null,
                 loginRequested: false,
                 loginSuccess: false,
-                loginFailed: true
+                loginFailed: true,
+            }
+
+        case AuthActions.LOGGED_OUT:
+            return {
+                token: null,
+                loginRequested: false,
+                loginSuccess: false,
+                loginFailed: false,
+                readingAuthCookie: false
             }
     }
 

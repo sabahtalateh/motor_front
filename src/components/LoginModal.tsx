@@ -11,7 +11,7 @@ interface Props extends StateProps {
 }
 
 interface State {
-    username: string,
+    username: string
     password: string
 }
 
@@ -26,7 +26,7 @@ class LoginModal extends React.Component<Props, State> {
         document.body.appendChild(this.portalNode)
         this.state = {
             username: '',
-            password: ''
+            password: '',
         }
         this.usernameInput = React.createRef()
         this.passwordInput = React.createRef()
@@ -39,65 +39,49 @@ class LoginModal extends React.Component<Props, State> {
     render() {
         console.log(this.props.loginRequested)
 
-        return (
-            ReactDOM.createPortal(
-                <Modal
-                    show={ this.props.show }
-                    onHide={ this.props.onClose }
-                    // backdrop='static'
-                    centered
-                    keyboard={ false }
-                    // animation={ false }
-                >
-                    <Modal.Body>
-                        {
-                            !this.props.loginRequested && this.props.loginFailed && <Alert variant="danger">
-                                <Alert.Heading>Login failed</Alert.Heading>
-                                <p>
-                                    Please recheck login and password
-                                </p>
-                            </Alert>
-                        }
+        return ReactDOM.createPortal(
+            <Modal
+                show={this.props.show}
+                onHide={this.props.onClose}
+                // backdrop='static'
+                centered
+                keyboard={false}
+                // animation={ false }
+            >
+                <Modal.Body>
+                    {!this.props.loginRequested && this.props.loginFailed && (
+                        <Alert variant="danger">
+                            <Alert.Heading>Login failed</Alert.Heading>
+                            <p>Please recheck login and password</p>
+                        </Alert>
+                    )}
 
-                        <Form>
-                            <Form.Group>
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control
-                                    disabled={ this.props.loginRequested }
-                                    type='email'
-                                    placeholder='Enter email'
-                                    ref={ this.usernameInput }
-                                />
-                            </Form.Group>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control disabled={this.props.loginRequested} type="email" placeholder="Enter email" ref={this.usernameInput} />
+                        </Form.Group>
 
-                            <Form.Group>
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    disabled={ this.props.loginRequested }
-                                    type='password'
-                                    placeholder='Password'
-                                    ref={ this.passwordInput }
-                                />
-                            </Form.Group>
-                            <Button disabled={ this.props.loginRequested }
-                                    variant='primary'
-                                    type='submit'
-                                    onClick={ (e: any) => {
-                                        e.preventDefault()
-                                        this.props.onSubmit(
-                                            this.usernameInput.current.value,
-                                            this.passwordInput.current.value,
-                                        )
-                                    } }>
-                                Submit
-                            </Button>
-                            { this.props.loginRequested &&
-                            <Spinner animation='border' size='lg' style={ { float: 'right' } }/> }
-                        </Form>
-                    </Modal.Body>
-                </Modal>,
-                this.portalNode
-            )
+                        <Form.Group>
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control disabled={this.props.loginRequested} type="password" placeholder="Password" ref={this.passwordInput} />
+                        </Form.Group>
+                        <Button
+                            disabled={this.props.loginRequested}
+                            variant="primary"
+                            type="submit"
+                            onClick={(e: any) => {
+                                e.preventDefault()
+                                this.props.onSubmit(this.usernameInput.current.value, this.passwordInput.current.value)
+                            }}
+                        >
+                            Submit
+                        </Button>
+                        {this.props.loginRequested && <Spinner animation="border" size="lg" style={{ float: 'right' }} />}
+                    </Form>
+                </Modal.Body>
+            </Modal>,
+            this.portalNode,
         )
     }
 }
@@ -111,7 +95,7 @@ interface StateProps {
 const mapStateToProps = ({ auth: { loginRequested, loginSuccess, loginFailed } }: AppState): StateProps => ({
     loginRequested,
     loginSuccess,
-    loginFailed
+    loginFailed,
 })
 
 export default connect<any, any, any>(mapStateToProps)(LoginModal)

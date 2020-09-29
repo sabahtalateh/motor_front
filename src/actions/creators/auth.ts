@@ -34,6 +34,13 @@ export const login = (dispatch: Dispatch<any>, graphQLService: GraphQLService) =
         })
 }
 
+const loggedOut = () => action(AuthActions.LOGGED_OUT)
+
+export const logout = (dispatch: Dispatch<any>) => () => {
+    cookie.deleteCookie('c_auth')
+    dispatch(loggedOut())
+}
+
 const readingAuthCookie = () => action(AuthActions.AUTH_COOKIE_START_READING)
 const tokenFromCookieRead = (token: Token) => action(AuthActions.TOKEN_FROM_COOKIE_READ, token)
 const authCookieNotFound = () => action(AuthActions.AUTH_COOKIE_NOT_FOUND)

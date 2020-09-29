@@ -8,9 +8,7 @@ import GraphQLService from '../services/GraphQLService'
 import { fetchMyStack } from '../actions/creators/creators'
 import EditorPage from './EditorPage'
 
-interface Props extends StateProps, DispatchProps {
-}
-
+interface Props extends StateProps, DispatchProps {}
 
 interface StateProps {
     // access: string
@@ -25,19 +23,17 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    fetchMyStack: (access: string) => void,
+    fetchMyStack: (access: string) => void
 }
 
 class MyStackPage extends React.Component<Props, {}> {
     componentDidMount() {
         // console.log(this.props.accessToken)
         // console.log(this.props.refreshToken)
-
         // if (null === this.props.accessToken) {
         //     this.props.login()
         //     return
         // }
-
         // console.log('fff')
         // this.props.fetchMyStack(this.props.accessToken)
     }
@@ -52,8 +48,6 @@ class MyStackPage extends React.Component<Props, {}> {
         //     this.props.login()
         //     return
         // }
-
-
         // this.props.fetchMyStack(this.props.accessToken)
     }
 
@@ -62,18 +56,16 @@ class MyStackPage extends React.Component<Props, {}> {
         //     return <div>Login required</div>
         // }
 
-        return <>
-            <MyStackList stack={ this.props.stack }></MyStackList>
-            <EditorPage/>
-        </>
+        return (
+            <>
+                <MyStackList stack={this.props.stack}></MyStackList>
+                <EditorPage />
+            </>
+        )
     }
 }
 
-const mapStateToProps =
-    ({
-         auth: { token },
-         myStack: { stack, loading, error }
-     }: AppState): StateProps => ({ stack, loading: true, error })
+const mapStateToProps = ({ auth: { token }, myStack: { stack, loading, error } }: AppState): StateProps => ({ stack, loading: true, error })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps): DispatchProps => {
     const { graphQLService } = ownProps

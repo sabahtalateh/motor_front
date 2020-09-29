@@ -1,16 +1,13 @@
 export const getCookie = (name: string) => {
-    let matches = document.cookie.match(new RegExp(
-        '(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'
-    ))
+    let matches = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'))
     return matches ? decodeURIComponent(matches[1]) : undefined
 }
 
 export const setCookie = (name: string, value: string, options: any = {}) => {
-
     options = {
         path: '/',
         // при необходимости добавьте другие значения по умолчанию
-        ...options
+        ...options,
     }
 
     if (options.expires instanceof Date) {
@@ -32,6 +29,6 @@ export const setCookie = (name: string, value: string, options: any = {}) => {
 
 export const deleteCookie = (name: string) => {
     setCookie(name, '', {
-        'max-age': -1
+        'max-age': -1,
     })
 }

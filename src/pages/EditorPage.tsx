@@ -154,12 +154,11 @@ class EditorPage extends React.Component<Props, State> {
     render() {
         return (
             <div>
-                <MarksActions createMark={ this.mark } editor={ this.editor }/>
-                <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
-                    { this.state.text.blocks.map(b => (
-                        <TextBlockView key={ b.id } block={ b } editor={ this.editor } data-editor-element="editor"
-                                       focused={ false } width="100%"/>
-                    )) }
+                <MarksActions createMark={this.mark} editor={this.editor} />
+                <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
+                    {this.state.text.blocks.map(b => (
+                        <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} width="100%" />
+                    ))}
                 </div>
             </div>
         )
