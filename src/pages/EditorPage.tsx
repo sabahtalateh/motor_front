@@ -2,14 +2,13 @@ import * as React from 'react'
 import { Dispatch } from 'react'
 import { match } from 'react-router-dom'
 import GraphQLService from '../services/GraphQLService'
-import { fetchText } from '../actions/creators'
+import { fetchText } from '../actions/creators/creators'
 import { withGraphQLService } from '../hoc/withGraphQLService'
 import { connect } from 'react-redux'
 import { AppState } from '../reducers'
 import TextBlockView from '../components/TextBlockView'
 import { Block, Editor } from '../app/Editor'
 import { Mark } from '../app/BlockEditor'
-import Graph from '../components/Graph'
 import MarksActions from '../components/MarksActions'
 
 interface Text {
@@ -155,18 +154,19 @@ class EditorPage extends React.Component<Props, State> {
     render() {
         return (
             <div>
-                <MarksActions createMark={this.mark} editor={this.editor} />
-                <div onKeyDown={this.keyDownHandler} onKeyUp={this.keyUpHandler}>
-                    {this.state.text.blocks.map(b => (
-                        <TextBlockView key={b.id} block={b} editor={this.editor} data-editor-element="editor" focused={false} width="100%" />
-                    ))}
+                <MarksActions createMark={ this.mark } editor={ this.editor }/>
+                <div onKeyDown={ this.keyDownHandler } onKeyUp={ this.keyUpHandler }>
+                    { this.state.text.blocks.map(b => (
+                        <TextBlockView key={ b.id } block={ b } editor={ this.editor } data-editor-element="editor"
+                                       focused={ false } width="100%"/>
+                    )) }
                 </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ text: { text, loading, error } }: AppState): StateProps => ({ text, loading, error })
+const mapStateToProps = ({ text: { text, loading, error } }: AppState): StateProps => ({ text, loading: true, error })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps): DispatchProps => {
     const { graphQLService } = ownProps

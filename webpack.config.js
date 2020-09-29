@@ -59,9 +59,11 @@ module.exports = (env) => {
             new HtmlWebpackPlugin({
                 template: 'public/index.html'
             }),
-            new CopyPlugin([
-                { from: 'public/assets', to: 'assets' },
-            ]),
+            new CopyPlugin({
+                patterns: [
+                    { from: 'public/assets', to: 'assets' },
+                ]
+            })
         ],
         devServer: {
             contentBase: path.join(__dirname, 'public'),
