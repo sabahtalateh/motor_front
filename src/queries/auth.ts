@@ -6,3 +6,12 @@ mutation {
   }
 }
 `
+
+export const refreshTokenQuery = (refresh: string) => `
+mutation {
+  refreshToken(refresh: "${refresh}") {
+    access
+    refresh
+  }
+}
+`

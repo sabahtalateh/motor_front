@@ -6,7 +6,10 @@ interface AuthReducerState {
     loginRequested: boolean
     loginSuccess: boolean
     loginFailed: boolean
+
     token: Token
+
+    autoRefreshFailed: boolean
 }
 
 const authInitialState: AuthReducerState = {
@@ -17,6 +20,8 @@ const authInitialState: AuthReducerState = {
     loginFailed: false,
 
     token: null,
+
+    autoRefreshFailed: false,
 }
 
 export interface Token {
@@ -63,6 +68,7 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
                 loginRequested: false,
                 loginSuccess: true,
                 loginFailed: false,
+                autoRefreshFailed: false,
             }
 
         case AuthActions.LOGIN_FAILED:
@@ -76,11 +82,22 @@ export const authReducer = (state: AuthReducerState = authInitialState, action: 
 
         case AuthActions.LOGGED_OUT:
             return {
+                ...state,
                 token: null,
                 loginRequested: false,
                 loginSuccess: false,
                 loginFailed: false,
                 readingAuthCookie: false,
+            }
+
+        case AuthActions.AUTO_REFRESH_FAILED:
+            return {
+                token: null,
+                loginRequested: false,
+                loginSuccess: false,
+                loginFailed: false,
+                readingAuthCookie: false,
+                autoRefreshFailed: true,
             }
     }
 

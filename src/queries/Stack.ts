@@ -1,5 +1,8 @@
 export const myStackQuery = (access: string) => `
-  query {
-    myStack(access: "${access}")
+query {
+  myStack(access: "${access}") {
+    id
+    short
   }
+}
 `

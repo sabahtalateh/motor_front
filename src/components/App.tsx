@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { createGlobalStyle } from 'styled-components'
 import styled from 'styled-components'
 import { Link, Route, Switch } from 'react-router-dom'
-import { Container, Row, Col, Button, Nav, NavDropdown, Form, FormControl, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Button, Nav, Alert } from 'react-bootstrap'
 
 import Home from '../pages/Home'
 import './App.css'
@@ -15,9 +15,8 @@ import { Dispatch } from 'react'
 import { login, logout, readAuthCookie } from '../actions/creators/auth'
 import GraphQLService from '../services/GraphQLService'
 import { withGraphQLService } from '../hoc/withGraphQLService'
-import * as cookie from '../util/cookie'
 import { Spinner } from 'react-bootstrap'
-import { Token } from '../reducers/authReducer'
+import { Token } from '../reducers/auth'
 
 const SPINNER_VAR = [
     'primary',
@@ -58,7 +57,7 @@ class App extends React.Component<Props, State> {
     constructor(props: Readonly<Props>) {
         super(props)
         this.state = {
-            authCookie: '123',
+            authCookie: null,
             loginOpen: false,
         }
     }
@@ -104,6 +103,19 @@ class App extends React.Component<Props, State> {
                     <>
                         <Container>
                             <GlobalStyle />
+                            {this.props.autoRefreshFailed && (
+                                <Row>
+                                    <Col>
+                                        <Alert variant='danger'>
+                                            <Alert.Heading>Token Expired! Please Login again</Alert.Heading>
+                                            <p>
+                                                Your access token expired so you need to login again.. As written in the title.. so i don't know what is this
+                                                text for
+                                            </p>
+                                        </Alert>
+                                    </Col>
+                                </Row>
+                            )}
                             <Row>
                                 <Col>
                                     <Navbar bg='light'>
@@ -152,7 +164,7 @@ class App extends React.Component<Props, State> {
                             {/*<nav>*/}
                             {/*    <Button>123</Button>*/}
                             {/*    <Link to='/'>Home</Link>*/}
-                            {/*    <Link to='/stack/my'>My Stack</Link>*/}
+                            {/*    <Link to='/myStack/my'>My Stack</Link>*/}
                             {/*    <Link to='/diagrams/new'>New Diagram</Link>*/}
                             {/*</nav>*/}
                             <Switch>
@@ -169,7 +181,9 @@ class App extends React.Component<Props, State> {
                                 onClose={() => {
                                     this.setState({ loginOpen: false })
                                 }}
-                                onSubmit={(username: string, password: string) => this.props.login(username, password)}
+                                onSubmit={(username: string, password: string) => {
+                                    this.props.login(username, password)
+                                }}
                             />
                         )}
                     </>
@@ -182,6 +196,7 @@ class App extends React.Component<Props, State> {
 interface StateProps {
     readingAuthCookie: boolean
     token: Token
+    autoRefreshFailed: boolean
 }
 
 interface OwnProps {
@@ -194,9 +209,10 @@ interface DispatchProps {
     readAuthCookie: () => void
 }
 
-const mapStateToProps = ({ auth: { readingAuthCookie, token } }: AppState): StateProps => ({
+const mapStateToProps = ({ auth: { readingAuthCookie, token, autoRefreshFailed } }: AppState): StateProps => ({
     readingAuthCookie,
     token,
+    autoRefreshFailed,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps): DispatchProps => {

@@ -20,4 +20,6 @@ export enum AuthActions {
     LOGIN_FAILED = 'LOGIN_FAILED',
 
     LOGGED_OUT = 'LOGGED_OUT',
+
+    AUTO_REFRESH_FAILED = 'AUTO_REFRESH_FAILED',
 }
