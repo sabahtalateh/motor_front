@@ -45,7 +45,7 @@ class LoginModal extends React.Component<Props, State> {
             <Modal
                 show={this.props.show}
                 onHide={this.props.onClose}
-                // backdrop='static'
+                backdrop={this.props.loginRequested ? 'static' : true}
                 centered
                 keyboard={false}
                 animation={false}
