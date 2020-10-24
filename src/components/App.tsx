@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { createGlobalStyle } from 'styled-components'
 import styled from 'styled-components'
 import { Link, Route, Switch } from 'react-router-dom'
-import { Container, Row, Col, Button, Nav, Alert } from 'react-bootstrap'
+import { Row, Col, Button, Nav, Alert } from 'react-bootstrap'
 
 import Home from '../pages/Home'
 import './App.css'
@@ -30,6 +30,12 @@ const SPINNER_VAR = [
 ]
 
 const SPINNER_ANIMATION = ['border', 'grow']
+
+const Container = styled.div`
+    min-width: 600px;
+    max-width: 1600px;
+    margin: 0 32px;
+`
 
 const GlobalStyle = createGlobalStyle`
   mark {
@@ -129,16 +135,6 @@ class App extends React.Component<Props, State> {
                                                         My Stack
                                                     </Link>
                                                 )}
-
-                                                {/*<Nav.Link href='#home'>My Stack</Nav.Link>*/}
-                                                {/*<Nav.Link href='#link'>Link</Nav.Link>*/}
-                                                {/*<NavDropdown title='Dropdown' id='basic-nav-dropdown'>*/}
-                                                {/*    <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>*/}
-                                                {/*    <NavDropdown.Item href='#action/3.2'>Another action</NavDropdown.Item>*/}
-                                                {/*    <NavDropdown.Item href='#action/3.3'>Something</NavDropdown.Item>*/}
-                                                {/*    <NavDropdown.Divider />*/}
-                                                {/*    <NavDropdown.Item href='#action/3.4'>Separated link</NavDropdown.Item>*/}
-                                                {/*</NavDropdown>*/}
                                             </Nav>
                                             {!this.props.token && (
                                                 <Button
@@ -161,12 +157,6 @@ class App extends React.Component<Props, State> {
                                     </Navbar>
                                 </Col>
                             </Row>
-                            {/*<nav>*/}
-                            {/*    <Button>123</Button>*/}
-                            {/*    <Link to='/'>Home</Link>*/}
-                            {/*    <Link to='/myStack/my'>My Stack</Link>*/}
-                            {/*    <Link to='/diagrams/new'>New Diagram</Link>*/}
-                            {/*</nav>*/}
                             <Switch>
                                 <Route path='/' component={Home} exact />
                                 <Route path='/stack/my' component={MyStack} exact />

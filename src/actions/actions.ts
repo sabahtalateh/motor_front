@@ -1,15 +1,3 @@
-export enum TextLoadingActions {
-    REQUESTED = 'TEXT_REQUESTED',
-    LOADED = 'TEXT_LOADED',
-    ERROR = 'TEXT_LOADING_ERROR',
-}
-
-export enum MyStackActions {
-    REQUESTED = 'MY_STACK_REQUESTED',
-    LOADED = 'MY_STACK_LOADED',
-    ERROR = 'MY_STACK_LOADING_ERROR',
-}
-
 export enum AuthActions {
     AUTH_COOKIE_START_READING = 'AUTH_COOKIE_START_READING',
     TOKEN_FROM_COOKIE_READ = 'TOKEN_FROM_COOKIE_READ',
@@ -22,4 +10,22 @@ export enum AuthActions {
     LOGGED_OUT = 'LOGGED_OUT',
 
     AUTO_REFRESH_FAILED = 'AUTO_REFRESH_FAILED',
+}
+
+export enum TextLoadingActions {
+    REQUESTED = 'TEXT_REQUESTED',
+    LOADED = 'TEXT_LOADED',
+    ERROR = 'TEXT_LOADING_ERROR',
+}
+
+export enum MyStackActions {
+    REQUESTED = 'MY_STACK_REQUESTED',
+    LOADED = 'MY_STACK_LOADED',
+    ERROR = 'MY_STACK_LOADING_ERROR',
+}
+
+export enum EditStackActions {
+    UPDATE_REQUESTED = 'UPDATE_ITEM_REQUESTED',
+    UPDATE_SUCCESS = 'UPDATE_SUCCESS',
+    UPDATE_FAILED = 'UPDATE_FAILED',
 }

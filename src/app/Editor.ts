@@ -13,6 +13,7 @@ interface Paragraph {
 
 export interface Block {
     id: string
+    originalId: string
     text: string
     marks: Mark[]
 }
@@ -134,6 +135,9 @@ export class Editor {
     }
 
     splitBlock = (block: Block, focusInsideInitiator: Focus) => {
+        console.log('SPLT')
+        console.log(block)
+
         const rebuilt: Block[] = []
         let focusBlock: Block
         let focusPosition: number
@@ -141,8 +145,8 @@ export class Editor {
 
         this.blocks.forEach(b => {
             if (b.id === block.id) {
+                // Usually returns 2 paragraphs from one text block
                 const paragraphs = splitTextToParagraphs(block.text, cursorPositionBeforeRebuild)
-                console.log(paragraphs)
                 const first_block_marks = b.marks.filter(m => m.startPos < paragraphs[0].end)
                 first_block_marks.forEach(m => {
                     if (m.endPos >= cursorPositionBeforeRebuild) {
@@ -163,14 +167,15 @@ export class Editor {
                         return m
                     })
 
-                console.log(lastBlockMarks)
-
                 paragraphs.forEach((paragraph, index) => {
+                    const originalId = index === 0 ? b.originalId : null
+
                     let marks: Mark[] = []
                     if (paragraphs.length - 1 === index) {
                         marks = lastBlockMarks
-                        const block = {
+                        const block: Block = {
                             id: uuid.v4(),
+                            originalId,
                             text: paragraph.text,
                             marks,
                         }
@@ -181,19 +186,21 @@ export class Editor {
                         marks = first_block_marks
                         rebuilt.push({
                             id: uuid.v4(),
+                            originalId,
                             text: paragraph.text,
                             marks,
                         })
                     } else {
                         rebuilt.push({
                             id: uuid.v4(),
+                            originalId,
                             text: paragraph.text,
                             marks,
                         })
                     }
                 })
             } else {
-                rebuilt.push({ id: b.id, text: b.text, marks: b.marks })
+                rebuilt.push({ id: b.id, originalId: b.originalId, text: b.text, marks: b.marks })
             }
         })
 
@@ -296,5 +303,5 @@ const joinBlocks = (lft: Block, rgt: Block): Block => {
         m.endPos += lftLen
     })
 
-    return { id: uuid.v4(), text: `${lft.text}${rgt.text}`, marks: [...lft.marks, ...rgt.marks] }
+    return { id: uuid.v4(), originalId: null, text: `${ lft.text }${ rgt.text }`, marks: [...lft.marks, ...rgt.marks] }
 }

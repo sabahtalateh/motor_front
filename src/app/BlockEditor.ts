@@ -1,6 +1,8 @@
 import { Block, Editor } from './Editor'
 import { Focus } from './Focus'
 
+
+
 export interface MarkupChar {
     char: string
     regionEnd?: number
@@ -36,7 +38,7 @@ export class BlockEditor {
     }
 
     getMarkup = (): string => {
-        const markup = createMarkupChars(this.block)
+        const markup = createMarkup(this.block)
         return createMarkupString(markup)
     }
 
@@ -54,9 +56,6 @@ export class BlockEditor {
     }
 
     updateContent = (content: string, setStateCallback: any) => {
-        // var escape = document.createElement('textarea');
-        // escape.textContent = content;
-        // content = escape.innerHTML;
         content = this.stripHtml(content)
 
         console.log(content)
@@ -221,7 +220,7 @@ export class BlockEditor {
     }
 }
 
-const createMarkupChars = (block: Block): Markup => {
+const createMarkup = (block: Block): Markup => {
     const content = block.text
     const marks = block.marks
 
@@ -366,4 +365,4 @@ const createMarkupString = (markup: Markup) => {
     return markupString
 }
 
-export { createMarkupChars, createMarkupString }
+export { createMarkup, createMarkupString }

@@ -42,7 +42,19 @@ const calcFocus = (): Focus => {
 }
 
 // TODO Передавать колбеком в редактор и вызывать из него
-const placeFocus = (block: Block, focus: Focus) => {
+const placeFocus = (block: Block, focus: Focus, editorStateCallbackCalled: boolean = false) => {
+    // Я не знаю почему но если раньше в коде блы вызван колбек который меняет стэйт то этот метод отрабатывает неправильно
+    //  если вызывать не из колбека.. наверно потому что стэйт меняется асинхронно а эта штука работает синхронно,
+    //  а в евент лупе он отработает после смены стэйта таким образом.. каким то вот таким образом
+    // Проблема в том что ничего не находит document.getElementById(block.id) потому что айдишки меняются при установке
+    //  марок.. из метода установки марок вызывается колбек для смены стейта.. ох ёпта.. я уже не помню как там чего работает Ж)
+    if (editorStateCallbackCalled) {
+        setTimeout(() => {
+            placeFocus(block, focus)
+        }, 0)
+        return
+    }
+
     const focusAbsolutePosition = 'caret' === focus.type ? focus.caret : focus.selection.start
 
     const area = document.getElementById(block.id)
@@ -54,47 +66,6 @@ const placeFocus = (block: Block, focus: Focus) => {
         for (let i = 0; i < area.childNodes.length; i++) {
             const checkingNode: any = area.childNodes[i]
             // 1 - Node
-            const regionStart = Number.parseInt(checkingNode.dataset.regionStart)
-            const regionEnd = Number.parseInt(checkingNode.dataset.regionEnd)
-            if (1 === checkingNode.nodeType && regionStart <= focusAbsolutePosition && regionEnd >= focusAbsolutePosition) {
-                nodeRegionStart = regionStart
-                node = area.childNodes[i]
-                break
-            }
-        }
-
-        if (node === undefined) {
-            return
-        }
-
-        let text = node.firstChild
-        if (null === text) {
-            return
-        }
-        while (true) {
-            // 3 - Text
-            if (3 === text.nodeType) {
-                break
-            }
-            text = text.firstChild
-        }
-        window.getSelection().collapse(text, focusAbsolutePosition - nodeRegionStart)
-    } else {
-        window.getSelection().collapse(area, 0)
-    }
-}
-
-const jjj = (blockId: string, pos: number) => {
-    const focusAbsolutePosition = pos
-    const area = document.getElementById(blockId)
-    area.focus()
-
-    if (area.childNodes.length > 0) {
-        let node
-        let nodeRegionStart
-        for (let i = 0; i < area.childNodes.length; i++) {
-            const checkingNode: any = area.childNodes[i]
-            // 1 - TNode
             const regionStart = Number.parseInt(checkingNode.dataset.regionStart)
             const regionEnd = Number.parseInt(checkingNode.dataset.regionEnd)
             if (1 === checkingNode.nodeType && regionStart <= focusAbsolutePosition && regionEnd >= focusAbsolutePosition) {

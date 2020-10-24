@@ -1,10 +1,11 @@
 import { textAndMarksQuery } from '../queries/Text'
-import { myStackQuery } from '../queries/Stack'
+import { addToMyStackQuery, myStackQuery } from '../queries/Stack'
 import { loginQuery, refreshTokenQuery } from '../queries/auth'
 import { Token } from '../reducers/auth'
 import { Dispatch } from 'react'
 import { autoRefreshFailed, loggedOut, loginSuccess, logout } from '../actions/creators/auth'
 import * as cookie from '../util/cookie'
+import { StackItem } from '../components/Stack/MyStackList'
 
 const hasError = (errors: any, extension: string) => {
     for (const e of errors) {
@@ -39,7 +40,7 @@ export default class GraphQLService {
         })
     }
 
-    gqlFetchRetryExpired = async (queryFn: (access: string) => string, token: Token, dispatch: Dispatch<any>) => {
+    gqlFetchAndRetry = async (queryFn: (access: string) => string, token: Token, dispatch: Dispatch<any>) => {
         const query = queryFn(token.access)
 
         const response = await (
@@ -101,7 +102,7 @@ export default class GraphQLService {
                     return response
                 }
             }
-            // If error while refresh then logout
+            // If myStackError while refresh then logout
             else {
                 cookie.deleteCookie('c_auth')
                 dispatch(autoRefreshFailed())
@@ -120,8 +121,12 @@ export default class GraphQLService {
         return this.fetchGraphQL(refreshTokenQuery(refresh))
     }
 
+    myStackAdd = async (token: Token, stackItem: StackItem, dispatch: Dispatch<any>) => {
+        return this.gqlFetchAndRetry(addToMyStackQuery(stackItem), token, dispatch)
+    }
+
     myStack = async (token: Token, dispatch: Dispatch<any>) => {
-        return this.gqlFetchRetryExpired(myStackQuery, token, dispatch)
+        return this.gqlFetchAndRetry(myStackQuery, token, dispatch)
     }
 
     text: (id: string) => Promise<any> = (id: string) => {

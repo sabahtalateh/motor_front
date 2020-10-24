@@ -1,0 +1,44 @@
+mutation myStackAdd {
+          myStackAdd(
+            access: "ad386c23507e4b759be094342258d7df",
+            stackItem: {
+              blocks: [{
+            text: "123",
+            marks: []
+        }
+{
+            text: "123",
+            marks: []
+        }]
+            }
+          ) {
+            id
+            title
+            blocks {
+              id
+              text
+              marks {
+                id
+                from
+                to
+              }
+            }
+          }
+        }
+
+
+query myStack {
+  myStack(access: "ad386c23507e4b759be094342258d7df") {
+    id
+    title
+    blocks {
+      id
+      text
+      marks {
+        id
+        from
+        to
+      }
+    }
+  }
+}

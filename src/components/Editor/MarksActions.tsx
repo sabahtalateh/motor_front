@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Mark } from '../app/BlockEditor'
-import { Block, Editor } from '../app/Editor'
+import { Mark } from '../../app/BlockEditor'
+import { Block, Editor } from '../../app/Editor'
 
 interface Props {
     createMark: () => void

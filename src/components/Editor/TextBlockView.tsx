@@ -1,10 +1,11 @@
 import * as React from 'react'
 import ContentEditable from 'react-contenteditable'
-import { BlockEditor } from '../app/BlockEditor'
-import { Block, Editor } from '../app/Editor'
-import { calcFocus, placeFocus } from '../app/Focus'
+import { BlockEditor } from '../../app/BlockEditor'
+import { Block, Editor } from '../../app/Editor'
+import { calcFocus, placeFocus } from '../../app/Focus'
 
 interface Props {
+    editable: boolean
     block: Block
     editor: Editor
     focused: boolean
@@ -47,7 +48,7 @@ export default class TextBlockView extends React.Component<Props, State> {
         // Place focus only if markup changed to prevent focusing when editor rebuilds
         //  because of new lines were added
         const lenDiffers = this.state.markup.length !== prevState.markup.length
-        if (lenDiffers || this.state.markup !== prevState.markup) {
+        if (lenDiffers || this.state.markup != prevState.markup) {
             placeFocus(this.editor.getBlock(), this.editor.getFocus())
         }
     }
@@ -113,22 +114,27 @@ export default class TextBlockView extends React.Component<Props, State> {
 
     render() {
         return (
-            <ContentEditable
-                id={this.props.block.id}
-                html={this.state.markup}
-                onChange={this.changeHandler}
-                onSelect={this.selectHandler}
-                onKeyUp={this.keyUpHandler}
-                data-region-start='0'
-                data-editor-element='block'
-                style={{
-                    whiteSpace: 'pre-wrap',
-                    border: '1px solid white',
-                    borderBottom: 'none',
-                    backgroundColor: '#FFEFD5',
-                    width: this.props.width,
-                }}
-            />
+            <>
+                {!this.props.editable && <div dangerouslySetInnerHTML={{ __html: this.state.markup }} />}
+                {this.props.editable && (
+                    <ContentEditable
+                        id={this.props.block.id}
+                        html={this.state.markup}
+                        onChange={this.changeHandler}
+                        onSelect={this.selectHandler}
+                        onKeyUp={this.keyUpHandler}
+                        data-region-start='0'
+                        data-editor-element='block'
+                        style={{
+                            whiteSpace: 'pre-wrap',
+                            border: '1px solid white',
+                            borderBottom: 'none',
+                            backgroundColor: '#FFEFD5',
+                            width: this.props.width,
+                        }}
+                    />
+                )}
+            </>
         )
     }
 }

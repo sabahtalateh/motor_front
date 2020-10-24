@@ -41,6 +41,4 @@ export const myStackReducer = (state: MyStackState = myStackInitialState, action
     return {
         ...state,
     }
-    // switch (action.type) {
-    // }
 }
