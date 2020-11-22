@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 
-module.exports = (env) => {
+module.exports = env => {
     const isProd = undefined !== env && env.mode.startsWith('prod')
 
     const fileName = isProd ? 'assets/[title].[hash].js' : 'assets/[title].js'
@@ -15,7 +15,7 @@ module.exports = (env) => {
     const config = {
         mode: isProd ? 'production' : 'development',
         entry: {
-            bundle: './src/index.tsx'
+            bundle: './src/index.tsx',
         },
         output: {
             filename: fileName,
@@ -23,47 +23,52 @@ module.exports = (env) => {
             path: path.resolve(__dirname, 'dist'),
         },
         resolve: {
-            extensions: [ '.tsx', '.ts', '.js' ],
+            extensions: ['.tsx', '.ts', '.js',
+                '.mjs'
+            ],
         },
         module: {
             rules: [
                 {
                     test: /\.(tsx|ts)$/,
                     exclude: /node_modules/,
-                    use: [ { loader: 'ts-loader' } ]
+                    use: [{ loader: 'ts-loader' }],
                 },
                 {
-                    test: /\.jsx?$/,         // Match both .js and .jsx files
+                    test: /\.jsx?$/, // Match both .js and .jsx files
                     exclude: /node_modules/,
                     use: {
                         loader: 'babel-loader',
                         options: {
-                            presets: [ '@babel/preset-env', '@babel/preset-react' ]
-                        }
-                    }
+                            presets: ['@babel/preset-env', '@babel/preset-react'],
+                        },
+                    },
                 },
                 {
                     test: /\.css$/i,
-                    use: [ 'style-loader', 'css-loader' ],
+                    use: ['style-loader', 'css-loader'],
                 },
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    loader: 'source-map-loader'
-                }
+                    loader: 'source-map-loader',
+                },
+                {
+                    test: /\.mjs$/,
+                    include: /node_modules/,
+                    type: 'javascript/auto',
+                },
             ],
         },
         plugins: [
             new CleanWebpackPlugin(),
             new webpack.HotModuleReplacementPlugin(),
             new HtmlWebpackPlugin({
-                template: 'public/index.html'
+                template: 'public/index.html',
             }),
             new CopyPlugin({
-                patterns: [
-                    { from: 'public/assets', to: 'assets' },
-                ]
-            })
+                patterns: [{ from: 'public/assets', to: 'assets' }],
+            }),
         ],
         devServer: {
             contentBase: path.join(__dirname, 'public'),
@@ -73,14 +78,14 @@ module.exports = (env) => {
             historyApiFallback: true,
             // host: '127.0.0.1',
             host: '0.0.0.0',
-            port: 9988
+            port: 9988,
         },
         devtool: 'source-map',
     }
 
     if (isProd) {
         config.externals = {
-            'react': 'React',
+            react: 'React',
             'react-dom': 'ReactDOM',
         }
     }

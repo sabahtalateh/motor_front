@@ -16,7 +16,7 @@ const myStackInitialState: NewStackItemState = {
     updateSuccess: false,
     updatedItem: null,
 
-    updateFailed: false
+    updateFailed: false,
 }
 
 export const newStackItemReducer = (state: NewStackItemState = myStackInitialState, action: any) => {
@@ -26,14 +26,14 @@ export const newStackItemReducer = (state: NewStackItemState = myStackInitialSta
                 updateRequested: true,
                 updateSuccess: false,
                 updatedItem: null,
-                updateFailed: false
+                updateFailed: false,
             }
         case EditStackActions.UPDATE_SUCCESS:
             return {
                 updateRequested: false,
                 updateSuccess: true,
                 updatedItem: action.payload,
-                updateFailed: false
+                updateFailed: false,
             }
     }
 

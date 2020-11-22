@@ -14,8 +14,8 @@ const addToMyStackSuccess = (stackItem: StackItem) => action(EditStackActions.UP
 export const saveToMyStack = (dispatch: Dispatch<any>, graphQLService: GraphQLService) => (token: Token, stackItem: StackItem) => {
     dispatch(updateMyStackRequested())
 
-    graphQLService.myStackAdd(token, stackItem, dispatch).then(d => {
-        dispatch(addToMyStackSuccess(d.myStackAdd))
+    // graphQLService.myStackAdd(token, stackItem, dispatch).then(d => {
+    //     dispatch(addToMyStackSuccess(d.myStackAdd))
 
         // console.log(d)
 
@@ -23,7 +23,7 @@ export const saveToMyStack = (dispatch: Dispatch<any>, graphQLService: GraphQLSe
         //     id:
         // })
         // console.log(d)
-    })
+    // })
 
 }
 

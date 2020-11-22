@@ -19,19 +19,21 @@ query myStack {
 `
 
 export const addToMyStackQuery = (stackItem: StackItem) => (access: string) => {
-    const blocksString = stackItem.blocks.map(b => {
-        let marksString = b.marks.map(
-            m => `{
+    const blocksString = stackItem.blocks
+        .map(b => {
+            let marksString = b.marks.map(
+                m => `{
             from: ${m.from}
             to: ${m.to}
         }`,
-        )
+            )
 
-        return `{
+            return `{
             text: "${b.text}",
             marks: [${marksString}]
         }`
-    }).join('\n')
+        })
+        .join('\n')
 
     console.log(blocksString)
 

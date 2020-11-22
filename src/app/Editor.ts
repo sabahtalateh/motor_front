@@ -2,7 +2,6 @@ import { Mark } from './BlockEditor'
 import { Focus, placeFocus, Selection } from './Focus'
 import uuid = require('uuid')
 import { deep } from '../util/Deep'
-import set = Reflect.set
 
 interface Paragraph {
     text: string
@@ -303,5 +302,5 @@ const joinBlocks = (lft: Block, rgt: Block): Block => {
         m.endPos += lftLen
     })
 
-    return { id: uuid.v4(), originalId: null, text: `${ lft.text }${ rgt.text }`, marks: [...lft.marks, ...rgt.marks] }
+    return { id: uuid.v4(), originalId: null, text: `${lft.text}${rgt.text}`, marks: [...lft.marks, ...rgt.marks] }
 }
